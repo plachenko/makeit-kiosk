@@ -24,7 +24,7 @@
       <div id="NO" @click="agree(false)" class="end" />
     </div>
 
-    
+
     <canvas v-for="(i, idx) in 2" :key="idx" ref="can"></canvas>
     <video autoplay ref="vid" />
   </div>
@@ -40,11 +40,12 @@ export default class AgreementScreen extends Vue {
     can: HTMLCanvasElement[];
     vid: HTMLVideoElement;
   }
-  
+
   vid!: HTMLVideoElement;
   slide!: HTMLElement;
   ctx: CanvasRenderingContext2D[] = [];
   lastImageData?: ImageData;
+  bScreen = false;
 
   mounted(){
     this.vid = this.$refs.vid;
@@ -52,7 +53,7 @@ export default class AgreementScreen extends Vue {
       const ctx = can.getContext('2d') as CanvasRenderingContext2D;
       can.width = window.innerWidth;
       can.height = window.innerHeight;
-      
+
       ctx.translate(can.width, 0);
       ctx.scale(-1, 1);
       this.ctx.push(ctx);
@@ -62,6 +63,7 @@ export default class AgreementScreen extends Vue {
     this.slide.style.top = (window.innerHeight / 2) - 50 + "px";
 
     setTimeout(()=>{
+      this.bScreen = true;
       navigator.mediaDevices.getUserMedia({video: {width: window.innerWidth, height: window.innerHeight}})
       .then((stream) => {
         this.vid.srcObject = stream;
@@ -72,18 +74,35 @@ export default class AgreementScreen extends Vue {
         console.log(error);
       });
     },1000);
+
+    document.addEventListener('keydown', (e) => {
+      if(this.bScreen){
+        switch(e.which){
+          // Y Key
+          case 89:
+            this.agree(true);
+            break;
+
+          // N Key
+          case 78:
+            this.agree(false);
+            break;
+        }
+      }
+    })
   }
 
   private update() {
     this.ctx[0].drawImage(this.vid, 0, 0);
     this.blend();
     this.checkAreas();
-    
+
     window.requestAnimationFrame(this.update);
   }
 
   private agree(val: boolean) {
     this.$emit('agreement', val);
+    this.bScreen = false;
   }
 
   private checkAreas(){
@@ -151,7 +170,7 @@ export default class AgreementScreen extends Vue {
 			++i;
 		}
   }
-  
+
   private threshold(value: number): number {
     return (value > 0x15) ? 0xFF : 0;
   }
