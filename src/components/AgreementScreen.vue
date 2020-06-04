@@ -1,5 +1,12 @@
 <template>
   <div id="Agreement">
+    <div id="notice">
+      <stophand style="position: absolute; top: 15px; left: 20px" />
+      <span>Covid Notice!</span>
+      <stophand style="position: absolute; top: 15px; right: 20px" />
+    </div>
+    <!-- <Slides /> -->
+    <!--
     <div id="AgreementTxt">
       <h1>MakeIt Labs Agreement</h1>
       <p><strong>Why:</strong> MakeIt Labs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety. Tap RIGHT (Y) to continue, LEFT(N) to go back</p>
@@ -23,13 +30,23 @@
 
     <canvas v-for="(i, idx) in 2" :key="idx" ref="can"></canvas>
     <video autoplay ref="vid" />
+    -->
   </div>
 </template>
 
 <script lang="ts">
+import gsap from 'gsap';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-@Component
+import stophand from '@/assets/Stop_hand.svg';
+import Slides from '@/components/Slides.vue';
+
+@Component({
+  components:{
+    stophand,
+    Slides
+  }
+})
 export default class AgreementScreen extends Vue {
   @Prop() private msg!: string;
   $refs!: {
@@ -44,6 +61,8 @@ export default class AgreementScreen extends Vue {
   bScreen = false;
 
   mounted(){
+    gsap.from("#notice", {top: -100, delay: .4});
+    /*
     this.vid = this.$refs.vid;
     for(const can of this.$refs.can) {
       const ctx = can.getContext('2d') as CanvasRenderingContext2D;
@@ -86,12 +105,11 @@ export default class AgreementScreen extends Vue {
         }
       }
     })
+    */
   }
 
   private update() {
     this.ctx[0].drawImage(this.vid, 0, 0);
-    this.blend();
-    this.checkAreas();
 
     window.requestAnimationFrame(this.update);
   }
@@ -100,90 +118,29 @@ export default class AgreementScreen extends Vue {
     this.$emit('agreement', val);
     this.bScreen = false;
   }
-
-  private checkAreas(){
-    const width = 100;
-    const height = window.innerHeight;
-    const h = height / 8;
-
-    for(let r = 0; r < 8; ++r){
-      const y = Math.round(r * h);
-
-      const blended = this.ctx[1].getImageData(0, y, width, h);
-      let i = 0;
-      let average = 0;
-      while(i < (blended.data.length / 4)){
-        average += (blended.data[i*4] + blended.data[i*4+1] + blended.data[i*4+2]) / 3;
-        ++i;
-      }
-
-      average = Math.round(average / (blended.data.length / 4));
-      if(average > 10){
-        this.slide.style.top = y + "px";
-      }
-
-    }
-  }
-
-  private blend(){
-    const width = 100;
-    const height = window.innerHeight;
-    const xOffset = window.innerWidth - width;
-
-    const sourceData = this.ctx[0].getImageData(xOffset, 0, width, height);
-    const blendedData = this.ctx[0].createImageData(width, height);
-    if(!this.lastImageData) this.lastImageData = this.ctx[0].getImageData(xOffset, 0, width, height);
-
-    this.differenceAccuracy(blendedData.data, sourceData.data, this.lastImageData.data);
-    this.ctx[1].putImageData(blendedData, xOffset, 0);
-    this.lastImageData = sourceData;
-  }
-
-  /* -- Utility -- */
-  private difference(target: Uint8ClampedArray, data1: Uint8ClampedArray, data2: Uint8ClampedArray) {
-    if(data1.length != data2.length) return null;
-    let i = 0;
-    while (i < (data1.length * 0.25)) {
-      target[4*i] = data1[4*i] == 0 ? 0 : this.fastAbs(data1[4*i] - data2[4*i]);
-      target[4*i+1] = data1[4*i+1] == 0 ? 0 : this.fastAbs(data1[4*i+1] - data2[4*i+1]);
-      target[4*i+2] = data1[4*i+2] == 0 ? 0 : this.fastAbs(data1[4*i+2] - data2[4*i+2]);
-      target[4*i+3] = 0xFF;
-      ++i;
-    }
-  }
-
-  private differenceAccuracy(target: Uint8ClampedArray, data1: Uint8ClampedArray, data2: Uint8ClampedArray) {
-		if (data1.length != data2.length) return null;
-		let i = 0;
-		while (i < (data1.length * 0.25)) {
-			const average1 = (data1[4*i] + data1[4*i+1] + data1[4*i+2]) / 3;
-			const average2 = (data2[4*i] + data2[4*i+1] + data2[4*i+2]) / 3;
-			const diff = this.threshold(this.fastAbs(average1 - average2));
-			target[4*i] = diff;
-			target[4*i+1] = diff;
-			target[4*i+2] = diff;
-			target[4*i+3] = 0xFF;
-			++i;
-		}
-  }
-
-  private threshold(value: number): number {
-    return (value > 0x15) ? 0xFF : 0;
-  }
-
-  private fastAbs(value: number): number {
-    return (value ^ (value >> 31)) - (value >> 31);
-  }
-  /* -- */
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 canvas{
   position: absolute;
 }
+
+#notice{
+  background-color: rgb(255, 0, 0);
+  text-shadow: 0px 2px 0px #000;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+  position: absolute;
+  font-family: 'Arial Rounded MT Bold';
+  font-size: 2em;
+  top: 0px;
+  }
+
 video{
   display: none;
   }
@@ -192,6 +149,7 @@ video{
     flex: 1;
     position: absolute;
     height: 100%;
+    width: 100%;
     overflow: hidden;
     }
     #AgreementTxt{

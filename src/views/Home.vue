@@ -11,22 +11,15 @@
         v-if="bShowLogo"
         @doneAnimating="onLogoFinish" />
 
-      <Welcome ref="welcome" v-if="bLogged" :user="user" />
+      <Welcome
+        v-if="bLogged"
+        ref="welcome"
+        :user="{name: 'denis'}" />
     </div>
 
     <!-- Agreement screen -->
-    <!-- <AgreementScreen v-if="logged" @agreement="handleAgreement($event)" /> -->
+    <AgreementScreen v-if="bShowNotice" @agreement="handleAgreement($event)" />
 
-    <!--
-    <div id="agree" class="overlay">
-      <div>Agreed! Free to use the space.</div>
-    </div>
-
-    <div id="disagree" class="overlay">
-      <div>Sorry, you can't use the space without agreeing. Please talk to a makeit member.</div>
-    </div>
-
-    -->
   </div>
 </template>
 
@@ -35,27 +28,30 @@ import { Component, Vue } from 'vue-property-decorator';
 import gsap from 'gsap';
 
 // @ is an alias to /src
-import AgreementScreen from '@/components/AgeementScreen.vue'
+import AgreementScreen from '@/components/AgreementScreen.vue'
 
 import Logo from '@/components/Logo.vue'
 import Time from '@/components/Time.vue'
 import Welcome from '@/components/Welcome.vue'
 
 @Component({
+  name: "Home",
   components:{
     Logo,
     Time,
-    Welcome
+    Welcome,
+    AgreementScreen
   }
 })
 export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
+  private bShowNotice = false;
   private user?: any = null;
 
   $refs!: {
-    logo: HTMLElement;
+    logo: Logo;
     time: HTMLElement;
     welcome: HTMLElement;
   }
@@ -70,16 +66,30 @@ export default class Home extends Vue{
     document.addEventListener('keydown', (e)=>{
       switch(e.which){
         case 32:
-          this.onEnter();
+          if(!this.bLogged){
+            this.onEnter();
+          }
           break;
       }
     })
   }
 
+  private handleAgreement(e: boolean){
+    console.log(e);
+  }
+
   private onEnter(){
-    // const logo = this.$refs.logo.$el;
-    // gsap.to(logo, {autoAlpha: 0, top: "-=20"});
-    // this.bLogged = true;
+
+    this.$refs.logo.glow();
+
+    setTimeout(() => {
+      this.bLogged = true;
+      gsap.to("#logo", {autoAlpha: 0, marginTop: "-=80"});
+      gsap.to("#title", {top: ( -1 * window.innerHeight ), delay: 3, onComplete: () => {
+        this.bShowNotice = true;
+      }});
+    }, 1000)
+
   }
 
   private onLogoFinish(){
@@ -87,56 +97,6 @@ export default class Home extends Vue{
   }
 
 }
-
-/*
-export default {
-  name: 'Home',
-  components: {
-    // AgreementScreen,
-    Time,
-    Logo
-  },
-  data: function(){
-    return{
-      logged: false,
-      showTime: false,
-      showLogo: false,
-      txt: "Denis Perchenko"
-    }
-  },
-  methods: {
-    testBack(){
-      this.showTime = true;
-    },
-    enter: function(){
-      // this.logged = true;
-      // gsap.to('#title', {bottom: window.innerHeight, delay: 4})
-      // this.$refs.time.exit();
-      // this.$refs.logo.glow();
-      this.showLogo = !this.showLogo;
-    },
-    exit: function(){
-      this.logged = false;
-
-      gsap.to('#title', {bottom: 0, delay: 4, onComplete:()=>{
-        document.querySelector("#agree").style.top = "-100%";
-        document.querySelector("#disagree").style.top = "100%";
-      }});
-    },
-    handleAgreement: function(e){
-      if(e == true){
-        gsap.to('#agree', {top: 0})
-      } else {
-        gsap.to('#disagree', {top: 0})
-      }
-      this.exit();
-    }
-  },
-  mounted(){
-  }
-}
-*/
-
 </script>
 <style>
 @font-face {
@@ -162,6 +122,8 @@ export default {
   color:#FFF;
   z-index: 9999;
 }
+
+
 #agree{
   background-color:#060;
   color:#000;
