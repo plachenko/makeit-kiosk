@@ -2,13 +2,9 @@
   <div id="Agreement">
     <div id="AgreementTxt">
       <h1>MakeIt Labs Agreement</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum consequatur vero rem voluptatum ipsam. Nesciunt at, delectus aliquid reprehenderit hic ex perferendis, animi aliquam dolorem tempora, asperiores qui natus ipsum!
-        Lorem ipsum dolor sit amet reprehenderit
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum consequatur vero rem voluptatum ipsam. Nesciunt at, delectus aliquid reprehenderit hic ex perferendis, animi aliquam dolorem tempora, asperiores qui natus ipsum!
-      </p>
+      <p><strong>Why:</strong> MakeIt Labs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety. Tap RIGHT (Y) to continue, LEFT(N) to go back</p>
+      <p>Do you have COVID symptoms? Fever, cough, exposure? Tap RIGHT (Y) to continue, LEFT(N) to go back.</p>
+      <p><strong>What:</strong> Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Tap RIGHT (Y) to continue, LEFT(N) to go back</p>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum consequatur vero rem voluptatum ipsam. Nesciunt at, delectus aliquid reprehenderit hic ex perferendis, animi aliquam dolorem tempora, asperiores qui natus ipsum!
       </p>
