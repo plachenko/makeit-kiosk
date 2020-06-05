@@ -47,7 +47,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = 1;
+  private bShowNotice = false;
   private user?: any = null;
 
   $refs!: {
