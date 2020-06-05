@@ -2,7 +2,7 @@
   <div id="welcome">
     <svg ref="welcome" xlink="http://www.w3.org/1999/xlink" style="width: 100%">
       <text y="50%" :x="xOffset" id="welcome" class="text" font-family="Arial Rounded MT Bold">Welcome</text>
-      <text font-family="Arial Rounded MT Bold" x="50%" y="50%" id="user" class="text">User Test</text>
+      <text font-family="Arial Rounded MT Bold" x="50%" y="50%" id="user" class="text">John Doe</text>
     </svg>
   </div>
 </template>
@@ -24,9 +24,10 @@ export default class Welcome extends Vue {
   mounted(){
     this.xOffset = window.innerWidth / 2 - 300;
 
+    gsap.from(this, .4, {xOffset: window.innerWidth/2 - 150, delay: 1});
     gsap.to("#welcome", {autoAlpha: 1, marginTop: "40"});
-    gsap.to('#user', 3, {strokeDashoffset: 0});
-    gsap.to('#user', {fillOpacity: 1, strokeOpacity: 0, delay: 2})
+    gsap.to('#user', 3.5, {strokeDashoffset: 0, delay: 1.4});
+    gsap.to('#user', {fillOpacity: 1, strokeOpacity: 0, delay: 3.5})
   }
 }
 </script>

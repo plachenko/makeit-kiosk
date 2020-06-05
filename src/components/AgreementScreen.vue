@@ -1,17 +1,25 @@
 <template>
   <div id="Agreement">
     <div id="notice">
-      <stophand style="position: absolute; top: 15px; left: 20px" />
+      <stophand style="position: absolute; top: 15px; left: 30px" />
       <span>Covid Notice!</span>
-      <stophand style="position: absolute; top: 15px; right: 20px" />
+      <stophand style="position: absolute; top: 15px; right: 30px" />
     </div>
-    <!-- <Slides /> -->
+
+    <Slides :slideIdx="idx" />
+
+    <div id="btnContainer">
+      <div class="btn" id="prev">&#x2B05; Back</div>
+      <div style="padding-top: 10px;">
+        <span class="arrow">&#x25BC;</span>
+        <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
+        <span class="arrow">&#x25BC;</span>
+      </div>
+      <div class="btn" id="next">Next &#x27A1;</div>
+    </div>
     <!--
     <div id="AgreementTxt">
       <h1>MakeIt Labs Agreement</h1>
-      <p><strong>Why:</strong> MakeIt Labs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety. Tap RIGHT (Y) to continue, LEFT(N) to go back</p>
-      <p>Do you have COVID symptoms? Fever, cough, exposure? Tap RIGHT (Y) to continue, LEFT(N) to go back.</p>
-      <p><strong>What:</strong> Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Tap RIGHT (Y) to continue, LEFT(N) to go back</p>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum consequatur vero rem voluptatum ipsam. Nesciunt at, delectus aliquid reprehenderit hic ex perferendis, animi aliquam dolorem tempora, asperiores qui natus ipsum!
       </p>
@@ -58,10 +66,17 @@ export default class AgreementScreen extends Vue {
   slide!: HTMLElement;
   ctx: CanvasRenderingContext2D[] = [];
   lastImageData?: ImageData;
+
   bScreen = false;
+  idx = 1;
 
   mounted(){
-    gsap.from("#notice", {top: -100, delay: .4});
+    gsap.from("#notice", {top: -100});
+    gsap.from("#btnContainer", {bottom: -100});
+    gsap.fromTo(".arrow", .4, {y: -2}, {y: 10, repeat: -1, yoyo: true});
+
+    gsap.from("#prev", .4, {left: "-=10", autoAlpha:0, delay: 1.5});
+    gsap.from("#next", .4, {right: "-=10", autoAlpha:0, delay: 1.5});
     /*
     this.vid = this.$refs.vid;
     for(const can of this.$refs.can) {
@@ -90,22 +105,24 @@ export default class AgreementScreen extends Vue {
       });
     },1000);
 
+    */
     document.addEventListener('keydown', (e) => {
       if(this.bScreen){
         switch(e.which){
           // Y Key
           case 89:
-            this.agree(true);
+            this.idx++;
+            // this.agree(true);
             break;
 
           // N Key
           case 78:
-            this.agree(false);
+            this.idx--;
+            // this.agree(false);
             break;
         }
       }
     })
-    */
   }
 
   private update() {
@@ -140,6 +157,42 @@ canvas{
   font-size: 2em;
   top: 0px;
   }
+
+#btnContainer{
+  height: 50px;
+  /* background-color:#F00; */
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.btn{
+  border-radius: 10px;
+  width: 120px;
+  top: -20px;
+  padding: 10px;
+  position: absolute;
+  font-weight: bold;
+  color:#FFF;
+  }
+#prev{
+  background-color:#C00;
+  left: 50px;
+}
+#next{
+  background-color:#0C0;
+  right: 50px;
+}
+.ftBtnTxt{
+  font-size: 1.1em;
+}
+
+.arrow{
+  display: inline-block;
+  padding: 0px 10px;
+}
 
 video{
   display: none;

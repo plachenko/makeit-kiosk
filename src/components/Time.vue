@@ -11,7 +11,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Time extends Vue {
-  private time: Moment | string = moment().format('hh:mm:ss a');
+  private time: Moment | string = moment().format('hh:mm:ss A');
   private offset = 190;
 
   mounted(){

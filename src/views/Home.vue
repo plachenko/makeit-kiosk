@@ -47,7 +47,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = false;
+  private bShowNotice = 0;
   private user?: any = null;
 
   $refs!: {
@@ -85,7 +85,7 @@ export default class Home extends Vue{
     setTimeout(() => {
       this.bLogged = true;
       gsap.to("#logo", {autoAlpha: 0, marginTop: "-=80"});
-      gsap.to("#title", {top: ( -1 * window.innerHeight ), delay: 3, onComplete: () => {
+      gsap.to("#title", {top: ( -1 * window.innerHeight ), delay: 5, onComplete: () => {
         this.bShowNotice = true;
       }});
     }, 1000)
