@@ -61,6 +61,7 @@ export default class AgreementScreen extends Vue {
   $refs!: {
     can: HTMLCanvasElement[];
     vid: HTMLVideoElement;
+    slides: Slides;
   }
 
   vid!: HTMLVideoElement;
@@ -71,6 +72,8 @@ export default class AgreementScreen extends Vue {
   bScreen = true;
   idx = 0;
 
+  timeOut = 120;
+
   mounted(){
     gsap.from("#notice", {top: -100});
     gsap.from("#btnContainer", {bottom: -100});
@@ -78,6 +81,14 @@ export default class AgreementScreen extends Vue {
 
     gsap.from("#prev", .4, {left: "-=10", autoAlpha:0, delay: 1.5});
     gsap.from("#next", .4, {right: "-=10", autoAlpha:0, delay: 1.5});
+
+    setInterval(() => {
+      if(this.timeOut > 0){
+        this.timeOut --;
+      } else{
+        this.agree(false);
+      }
+    }, 1000);
     /*
     this.vid = this.$refs.vid;
     for(const can of this.$refs.can) {
@@ -108,25 +119,29 @@ export default class AgreementScreen extends Vue {
 
     */
     document.addEventListener('keydown', (e) => {
-      if(this.bScreen){
-        switch(e.which){
-          // Y Key
-          case 89:
+      switch(e.which){
+        // Y Key
+        case 89:
+          if(this.idx < this.$refs.slides.slides.length - 1){
             gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
-            break;
+          }
+          break;
 
-          // N Key
-          case 78:
+        // N Key
+        case 78:
+          if(this.idx){
             gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
-            break;
-        }
+          }
+          break;
       }
     });
+
     document.addEventListener('keyup', (e) => {
       switch(e.which){
         // Y Key
         case 89:
           if(this.idx < this.$refs.slides.slides.length - 1){
+            this.timeOut = 120;
             this.idx++;
           } else {
             this.agree(true);
@@ -137,6 +152,7 @@ export default class AgreementScreen extends Vue {
         // N Key
         case 78:
           if(this.idx){
+            this.timeOut = 120;
             this.idx--;
           }else{
             this.agree(false);
