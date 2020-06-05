@@ -6,12 +6,13 @@
       <stophand style="position: absolute; top: 15px; right: 30px" />
     </div>
 
-    <Slides :slideIdx="idx" />
+    <Slides ref="slides" :slideIdx="idx" />
 
     <div id="btnContainer">
       <div class="btn" id="prev">&#x2B05; Back</div>
       <div style="padding-top: 10px;">
         <span class="arrow">&#x25BC;</span>
+        <span class="numTxt">({{this.idx+1}} / 3)</span>
         <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
         <span class="arrow">&#x25BC;</span>
       </div>
@@ -67,8 +68,8 @@ export default class AgreementScreen extends Vue {
   ctx: CanvasRenderingContext2D[] = [];
   lastImageData?: ImageData;
 
-  bScreen = false;
-  idx = 1;
+  bScreen = true;
+  idx = 0;
 
   mounted(){
     gsap.from("#notice", {top: -100});
@@ -111,18 +112,39 @@ export default class AgreementScreen extends Vue {
         switch(e.which){
           // Y Key
           case 89:
-            this.idx++;
-            // this.agree(true);
+            gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
             break;
 
           // N Key
           case 78:
-            this.idx--;
-            // this.agree(false);
+            gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
             break;
         }
       }
-    })
+    });
+    document.addEventListener('keyup', (e) => {
+      switch(e.which){
+        // Y Key
+        case 89:
+          if(this.idx < this.$refs.slides.slides.length - 1){
+            this.idx++;
+          } else {
+            this.agree(true);
+          }
+          gsap.to("#next", {backgroundColor: "#070", boxShadow: "#0F0 0px 0px 0px"})
+          break;
+
+        // N Key
+        case 78:
+          if(this.idx){
+            this.idx--;
+          }else{
+            this.agree(false);
+          }
+          gsap.to("#prev", {backgroundColor: "#700", boxShadow: "#F00 0px 0px 0px"})
+          break;
+      }
+    });
   }
 
   private update() {
@@ -132,8 +154,9 @@ export default class AgreementScreen extends Vue {
   }
 
   private agree(val: boolean) {
-    this.$emit('agreement', val);
-    this.bScreen = false;
+    console.log(val);
+    // this.$emit('agreement', val);
+    // this.bScreen = false;
   }
 }
 </script>
@@ -164,7 +187,7 @@ canvas{
   position: absolute;
   bottom: 0px;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 0px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -178,15 +201,22 @@ canvas{
   color:#FFF;
   }
 #prev{
-  background-color:#C00;
+  background-color:#700;
   left: 50px;
 }
 #next{
-  background-color:#0C0;
+  background-color:#070;
   right: 50px;
 }
 .ftBtnTxt{
-  font-size: 1.1em;
+  font-size: 1.4em;
+}
+
+.numTxt{
+  position: absolute;
+  bottom: 80px;
+  left: calc(50% - 20px);
+  display: inline-block;
 }
 
 .arrow{

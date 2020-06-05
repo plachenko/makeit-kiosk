@@ -2,7 +2,7 @@
   <div class="home">
 
     <!-- Title Screen -->
-    <div id="title" class="overlay">
+    <div id="title" v-if="!bShowNotice" class="overlay">
       <Time ref="time" v-if="bShowTime" />
 
       <Logo
@@ -47,7 +47,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = 0;
+  private bShowNotice = 1;
   private user?: any = null;
 
   $refs!: {
