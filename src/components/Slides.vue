@@ -1,15 +1,15 @@
 <template>
   <div id="slide">
     <div style="width: 550px; float: left; padding: 10px; position: relative;">
-      <p class="slide">MakeIt Labs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety.</p>
-      <p class="slide">Do you have COVID symptoms?
+      <p class="slide">MakeItLabs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety.</p>
+      <p class="slide">I do not have any of the following symptoms to Covid-19:
         <ul>
           <li>Fever</li>
           <li>cough</li>
           <li>exposure</li>
         </ul>
       </p>
-      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. On the next screen we'll capture an image to make sure you're wearing a mask. After using the kiosk, please make sure to wash your hands.</p>
+      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 2 second delay. After using the kiosk, please make sure to wash your hands.</p>
       <!--
       <div style="border-top: 2px solid; margin-top 20px;">
         <p >Tap LEFT(N) to go back, RIGHT (Y) to continue</p>
@@ -39,7 +39,7 @@ export default class Slides extends Vue {
   mounted(){
     this.slides = document.getElementsByClassName('slide');
 
-    gsap.from("#slide", {autoAlpha: 0, delay: 1});
+    gsap.from("#slide", {autoAlpha: 0, delay: .5});
     gsap.to(this.slides[0], {autoAlpha: 1});
   }
 }

@@ -1,23 +1,31 @@
 <template>
   <div id="Agreement">
-    <div id="notice">
-      <stophand style="position: absolute; top: 15px; left: 30px" />
-      <span>Covid Notice!</span>
-      <stophand style="position: absolute; top: 15px; right: 30px" />
-    </div>
-
-    <Slides ref="slides" :slideIdx="idx" />
-
-    <div id="btnContainer">
-      <div class="btn" id="prev">&#x2B05; Back</div>
-      <div style="padding-top: 10px;">
-        <span class="arrow">&#x25BC;</span>
-        <span class="numTxt">({{this.idx+1}} / 3)</span>
-        <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
-        <span class="arrow">&#x25BC;</span>
+    <div id="AgreementNotice">
+      <div id="notice">
+        <stophand style="position: absolute; top: 15px; left: 30px" />
+        <span>Covid-19 Notice!</span>
+        <stophand style="position: absolute; top: 15px; right: 30px" />
       </div>
-      <div class="btn" id="next">Next &#x27A1;</div>
+
+      <Slides ref="slides" :slideIdx="idx" />
+
+      <div id="btnContainer">
+        <div class="btn" id="prev">&#x2B05; Back</div>
+        <div style="padding-top: 10px;">
+          <span class="arrow">&#x25BC;</span>
+          <span class="numTxt">({{this.idx+1}} / 3)</span>
+          <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
+          <span class="arrow">&#x25BC;</span>
+        </div>
+        <div class="btn" id="next">Next &#x27A1;</div>
+      </div>
     </div>
+
+    <div id="AgreementTxt">
+      <p v-if="bAgree">Make All the Things! Make sure you wash your hands before using the space. Thank you, enjoy your visit!</p>
+      <p v-else>You may not use the space until you can fulfil the terms. Contact board@makeitlabs.com for any questions or concerns.</p>
+    </div>
+
     <!--
     <div id="AgreementTxt">
       <h1>MakeIt Labs Agreement</h1>
@@ -69,6 +77,7 @@ export default class AgreementScreen extends Vue {
   ctx: CanvasRenderingContext2D[] = [];
   lastImageData?: ImageData;
 
+  bAgree = false;
   bScreen = true;
   idx = 0;
 
@@ -76,11 +85,11 @@ export default class AgreementScreen extends Vue {
 
   mounted(){
     gsap.from("#notice", {top: -100});
-    gsap.from("#btnContainer", {bottom: -100});
+    gsap.from("#btnContainer", {bottom: -100, delay: 1});
     gsap.fromTo(".arrow", .4, {y: -2}, {y: 10, repeat: -1, yoyo: true});
 
-    gsap.from("#prev", .4, {left: "-=10", autoAlpha:0, delay: 1.5});
-    gsap.from("#next", .4, {right: "-=10", autoAlpha:0, delay: 1.5});
+    gsap.from("#prev", .4, {left: "-=40", autoAlpha:0, delay: 1.8});
+    gsap.from("#next", .4, {right: "-=40", autoAlpha:0, delay: 1.8});
 
     setInterval(() => {
       if(this.timeOut > 0){
@@ -170,8 +179,20 @@ export default class AgreementScreen extends Vue {
   }
 
   private agree(val: boolean) {
-    console.log(val);
-    // this.$emit('agreement', val);
+    const offset = val ? -1 : 1;
+    gsap.to("#AgreementNotice", {x: offset * window.innerWidth});
+    setTimeout(() => {
+      this.$emit('agreement', val);
+    }, 4000);
+
+    this.bAgree = val;
+
+    if(val){
+      gsap.to('#AgreementTxt', {autoAlpha: 1, backgroundColor: "#0F0", delay: .5});
+    }else{
+      gsap.to('#AgreementTxt', {autoAlpha: 1, backgroundColor: "#F00", delay: .5});
+    }
+
     // this.bScreen = false;
   }
 }
@@ -243,7 +264,7 @@ canvas{
 video{
   display: none;
   }
-  #Agreement{
+  #Agreement, #AgreementNotice{
     display: flex;
     flex: 1;
     position: absolute;
@@ -254,12 +275,19 @@ video{
     #AgreementTxt{
       flex: 1;
       text-shadow: 1 1 1;
+      position: absolute;
       color:#FFF;
-      text-align: center;
-      font-size: 2em;
-      z-index: 9995;
-      padding-right: 50px;
-      background-color:rgba(0, 0, 0, .6);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      width: 100%;
+      }
+      #AgreementTxt p {
+        font-size: 2em;
+        text-align: justify;
+        width: 460px;
       }
       #AgreementTxt h1{
         display: inline-block;

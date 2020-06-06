@@ -2,19 +2,22 @@
   <div class="home">
 
     <!-- Title Screen -->
-    <div id="title" v-if="!bShowNotice" class="overlay">
-      <Time ref="time" v-if="bShowTime" />
+    <div id="title" class="overlay">
+      <div v-if="!bShowNotice" class="innerTitle">
+        <Time ref="time" v-if="bShowTime" />
 
-      <Logo
-        ref="logo"
-        id="logo"
-        v-if="bShowLogo"
-        @doneAnimating="onLogoFinish" />
+        <Logo
+          ref="logo"
+          id="logo"
+          v-if="bShowLogo"
+          @doneAnimating="onLogoFinish" />
 
-      <Welcome
-        v-if="bLogged"
-        ref="welcome"
-        :user="{name: 'denis'}" />
+        <Welcome
+          v-if="bLogged"
+          ref="welcome"
+          :user="{name: 'denis'}" />
+
+      </div>
     </div>
 
     <!-- Agreement screen -->
@@ -47,7 +50,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = 1;
+  private bShowNotice = false;
   private user?: any = null;
 
   $refs!: {
@@ -63,6 +66,10 @@ export default class Home extends Vue{
 
     this.bShowLogo = true;
 
+    if(this.bShowNotice){
+      gsap.to('#title', {y: -1 * window.innerHeight})
+    }
+
     document.addEventListener('keydown', (e)=>{
       switch(e.which){
         case 32:
@@ -75,6 +82,12 @@ export default class Home extends Vue{
   }
 
   private handleAgreement(e: boolean){
+    this.bLogged = false;
+    this.bShowTime = false;
+    gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
+      this.bShowNotice = false;
+    }});
+    // this.bLogged = false;
     console.log(e);
   }
 
@@ -85,7 +98,7 @@ export default class Home extends Vue{
     setTimeout(() => {
       this.bLogged = true;
       gsap.to("#logo", {autoAlpha: 0, marginTop: "-=80"});
-      gsap.to("#title", {top: ( -1 * window.innerHeight ), delay: 5, onComplete: () => {
+      gsap.to("#title", {y: ( -1 * window.innerHeight ), delay: 5, onComplete: () => {
         this.bShowNotice = true;
       }});
     }, 1000)
@@ -109,18 +122,29 @@ export default class Home extends Vue{
 
 .overlay{
   position: absolute;
+  font-size: 2em;
+}
+#title, #test{
+  background-color:#000;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  place-items: center;
-  font-size: 2em;
-}
-#title{
-  background-color:#000;
+  position: absolute;
   color:#FFF;
   z-index: 9999;
+}
+
+.innerTitle{
+  display: flex;
+  flex: 1;
+  position: absolute;
+  justify-content: center;
+  place-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
 
 
