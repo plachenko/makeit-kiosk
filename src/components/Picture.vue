@@ -25,6 +25,7 @@ export default class Picture extends Vue{
   pictureCnt = 3;
   vid?: HTMLVideoElement;
   ctx?: CanvasRenderingContext2D;
+  can?: HTMLCanvasElement;
   req?: any;
   interval?: any;
   localStream?: MediaStream;
@@ -32,11 +33,11 @@ export default class Picture extends Vue{
 
   mounted(){
     this.vid = this.$refs.vid;
-    const can = this.$refs.can;
-      can.width = 500;
-      can.height = 500;
+    this.can = this.$refs.can;
+    this.can.width = 500;
+    this.can.height = 500;
 
-    this.ctx = can.getContext('2d');
+    this.ctx = this.can.getContext('2d');
 
     navigator.mediaDevices.getUserMedia({video: {width: 500, height: 500}})
     .then((stream) => {
@@ -73,7 +74,7 @@ export default class Picture extends Vue{
     clearInterval(this.interval);
     window.cancelAnimationFrame(this.req);
     setTimeout(()=>{
-      this.$emit('pictureTaken');
+      this.$emit('pictureTaken', this.can);
     }, 3000);
   }
 

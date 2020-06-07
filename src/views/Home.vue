@@ -80,10 +80,14 @@ export default class Home extends Vue{
     })
   }
 
-  private handleAgreement(e: boolean){
+  private handleAgreement(e: any){
     this.bLogged = false;
     this.bShowTime = false;
-    this.user.agree = e;
+    this.user.agree = e.val;
+    this.user.picture = e.picture;
+
+    console.log(this.user);
+
     gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
       this.bShowNotice = false;
       this.user = null;
@@ -97,7 +101,8 @@ export default class Home extends Vue{
     this.user = {
       name: 'John Test User',
       time: new Date(),
-      agree: false
+      agree: false,
+      picture: null
     }
 
     setTimeout(() => {

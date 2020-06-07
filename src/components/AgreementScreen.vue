@@ -130,9 +130,9 @@ export default class AgreementScreen extends Vue {
     });
   }
 
-  private onPicture(){
+  private onPicture(picture: any){
     this.bPicture = false;
-    this.agree(true);
+    this.agree(true, picture);
   }
 
   private onError(){
@@ -147,12 +147,12 @@ export default class AgreementScreen extends Vue {
     window.requestAnimationFrame(this.update);
   }
 
-  private agree(val: boolean) {
+  private agree(val: boolean, picture: any = null) {
     this.bAgree = val;
     gsap.to("#AgreementNotice", {opacity: 0});
 
     setTimeout(() => {
-      this.$emit('agreement', val);
+      this.$emit('agreement', {val: val, picture: picture});
     }, 6000);
 
     if(val){
