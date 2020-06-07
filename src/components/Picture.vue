@@ -4,6 +4,9 @@
       <div id="flash" />
       <canvas id="can" ref="can"></canvas>
       <span v-show="pictureCnt" style="align-self: center; color: #FFF; z-index: 9999; position: absolute; font-size: 3em;">{{pictureCnt}}</span>
+      <div v-if="error" id="error">
+        {{error}}. Please contact board@makeitlabs.com
+      </div>
     </div>
     <video autoplay ref="vid" />
   </div>
@@ -25,6 +28,7 @@ export default class Picture extends Vue{
   req?: any;
   interval?: any;
   localStream?: MediaStream;
+  error = "";
 
   mounted(){
     this.vid = this.$refs.vid;
@@ -49,8 +53,9 @@ export default class Picture extends Vue{
 
       this.req = this.update();
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((error: Error) => {
+      this.error = error.message;
+      this.$emit('handleError');
     });
 
   }
@@ -74,7 +79,9 @@ export default class Picture extends Vue{
 
   beforeDestroy(){
     this.vid.src = "";
-    this.localStream.getTracks()[0].stop();
+    if(this.localStream){
+      this.localStream.getTracks()[0].stop();
+    }
   }
 
 }
@@ -108,6 +115,15 @@ video{
   background-color:#FFF;
   z-index: 9999;
   opacity: 0;
+}
+#error{
+  position: absolute;
+  background-color:#F00;
+  color:#FFF;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  top: 40px;
 }
 </style>
 

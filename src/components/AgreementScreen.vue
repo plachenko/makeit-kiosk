@@ -20,7 +20,7 @@
         <div class="btn" id="next">Next &#x27A1;</div>
       </div>
 
-      <Picture v-if="bPicture" @pictureTaken="onPicture" />
+      <Picture v-if="bPicture" @handleError="onError" @pictureTaken="onPicture" />
     </div>
 
     <div id="AgreementTxt">
@@ -133,6 +133,12 @@ export default class AgreementScreen extends Vue {
   private onPicture(){
     this.bPicture = false;
     this.agree(true);
+  }
+
+  private onError(){
+    setTimeout(() => {
+      this.agree(false);
+    }, 5000);
   }
 
   private update() {
