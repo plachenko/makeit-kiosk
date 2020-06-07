@@ -33,7 +33,8 @@ export default class Time extends Vue {
 #timeContainer{
   color:#FFF;
   padding: 20px;
-  width: 200px;
+  width: 300px;
+  box-sizing: border-box;
   text-align: center;
   border: #555 2px solid;
   border-radius: 20px;

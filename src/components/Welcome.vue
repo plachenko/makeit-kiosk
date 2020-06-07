@@ -1,8 +1,12 @@
 <template>
   <div id="welcome">
     <svg ref="welcome" xlink="http://www.w3.org/1999/xlink" style="width: 100%">
-      <text y="50%" :x="xOffset" id="welcome" class="text" font-family="Arial Rounded MT Bold">Welcome</text>
-      <text font-family="Arial Rounded MT Bold" x="50%" y="50%" id="user" class="text">John Doe</text>
+      <!--
+      <text id="txtGroup">
+        <tspan y="50%" :x="xOffset" id="welcome" class="text" font-family="Arial Rounded MT Bold">Welcome</tspan>
+      </text>
+      -->
+      <text font-family="Arial Rounded MT Bold" y="50%" id="user" class="text">{{user.name}}</text>
     </svg>
   </div>
 </template>
@@ -22,12 +26,16 @@ export default class Welcome extends Vue {
   };
 
   mounted(){
-    this.xOffset = window.innerWidth / 2 - 300;
+    const nameEl= document.getElementById('user');
+    // const welcomeEl = document.getElementById('welcome');
 
-    gsap.from(this, .4, {xOffset: window.innerWidth/2 - 150, delay: 1});
-    gsap.to("#welcome", {autoAlpha: 1, marginTop: "40"});
-    gsap.to('#user', 3.5, {strokeDashoffset: 0, delay: 1.4});
-    gsap.to('#user', {fillOpacity: 1, strokeOpacity: 0, delay: 3.5})
+    // this.xOffset = ( welcomeEl.clientWidth );
+    this.xOffset = window.innerWidth / 2 - (nameEl.clientWidth/2);
+    nameEl.setAttribute("x", `${this.xOffset}`);
+
+    gsap.to("#welcome", {autoAlpha: 1, marginTop: 35});
+    gsap.to('#user', 3.5, {strokeDashoffset: 0});
+    gsap.to('#user', {fillOpacity: 1, strokeOpacity: 0, delay: 1.2})
   }
 }
 </script>

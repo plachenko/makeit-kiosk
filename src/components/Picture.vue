@@ -54,7 +54,7 @@ export default class Picture extends Vue{
       this.req = this.update();
     })
     .catch((error: Error) => {
-      this.error = error.message;
+      this.error = "Webcam not found";
       this.$emit('handleError');
     });
 

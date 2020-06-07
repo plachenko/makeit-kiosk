@@ -15,13 +15,15 @@
         <Welcome
           v-if="bLogged"
           ref="welcome"
-          :user="{name: 'denis'}" />
+          :user="user" />
 
       </div>
     </div>
 
     <!-- Agreement screen -->
-    <AgreementScreen v-if="bShowNotice" @agreement="handleAgreement($event)" />
+    <AgreementScreen
+      v-if="bShowNotice"
+      @agreement="handleAgreement($event)" />
 
   </div>
 </template>
@@ -60,9 +62,6 @@ export default class Home extends Vue{
   }
 
   mounted(){
-    this.user = {
-      name: 'Denis Perchenko'
-    }
 
     this.bShowLogo = true;
 
@@ -84,8 +83,10 @@ export default class Home extends Vue{
   private handleAgreement(e: boolean){
     this.bLogged = false;
     this.bShowTime = false;
+    this.user.agree = e;
     gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
       this.bShowNotice = false;
+      this.user = null;
     }});
   }
 
@@ -93,10 +94,16 @@ export default class Home extends Vue{
 
     this.$refs.logo.glow();
 
+    this.user = {
+      name: 'john doe',
+      time: new Date(),
+      agree: false
+    }
+
     setTimeout(() => {
       this.bLogged = true;
       gsap.to("#logo", {autoAlpha: 0, marginTop: "-=80"});
-      gsap.to("#title", {y: ( -1 * window.innerHeight ), delay: 5, onComplete: () => {
+      gsap.to("#title", {y: ( -1 * window.innerHeight ), delay: 3, onComplete: () => {
         this.bShowNotice = true;
       }});
     }, 1000)
