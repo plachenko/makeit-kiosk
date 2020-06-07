@@ -50,7 +50,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = true;
+  private bShowNotice = false;
   private user?: any = null;
 
   $refs!: {

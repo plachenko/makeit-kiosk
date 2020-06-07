@@ -64,6 +64,8 @@ export default class AgreementScreen extends Vue {
 
   timeOut = 120;
 
+  interval?: any;
+
   mounted(){
     gsap.from("#notice", {top: -100});
     gsap.from("#btnContainer", {bottom: -100, delay: 1});
@@ -72,7 +74,7 @@ export default class AgreementScreen extends Vue {
     gsap.from("#prev", .4, {left: "-=40", autoAlpha:0, delay: 1.8});
     gsap.from("#next", .4, {right: "-=40", autoAlpha:0, delay: 1.8});
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       if(this.timeOut > 0){
         this.timeOut --;
       } else{
@@ -129,6 +131,7 @@ export default class AgreementScreen extends Vue {
   }
 
   private onPicture(){
+    this.bPicture = false;
     this.agree(true);
   }
 
@@ -140,10 +143,12 @@ export default class AgreementScreen extends Vue {
 
   private agree(val: boolean) {
     const offset = val ? -1 : 1;
-    gsap.to("#AgreementNotice", {x: offset * window.innerWidth});
+      gsap.to("#AgreementNotice", {opacity: 0});
+
+    // gsap.to("#AgreementNotice", {x: offset * window.innerWidth});
     setTimeout(() => {
       this.$emit('agreement', val);
-    }, 4000);
+    }, 6000);
 
     this.bAgree = val;
 
@@ -152,6 +157,10 @@ export default class AgreementScreen extends Vue {
     }else{
       gsap.to('#AgreementTxt', {autoAlpha: 1, backgroundColor: "#F00", delay: .5});
     }
+  }
+
+  beforeDestroy(){
+    clearInterval(this.interval);
   }
 }
 </script>
@@ -219,9 +228,6 @@ canvas{
   padding: 0px 10px;
 }
 
-video{
-  display: none;
-  }
   #Agreement, #AgreementNotice{
     display: flex;
     flex: 1;
