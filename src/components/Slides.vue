@@ -10,11 +10,6 @@
         </ul>
       </p>
       <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 2 second delay. After using the kiosk, please make sure to wash your hands.</p>
-      <!--
-      <div style="border-top: 2px solid; margin-top 20px;">
-        <p >Tap LEFT(N) to go back, RIGHT (Y) to continue</p>
-      </div>
-      -->
     </div>
   </div>
 </template>

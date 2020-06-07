@@ -19,35 +19,14 @@
         </div>
         <div class="btn" id="next">Next &#x27A1;</div>
       </div>
+
+      <Picture v-if="bPicture" @pictureTaken="onPicture" />
     </div>
 
     <div id="AgreementTxt">
       <p v-if="bAgree">Make All the Things! Make sure you wash your hands before using the space. Thank you, enjoy your visit!</p>
-      <p v-else>You may not use the space until you can fulfil the terms. Contact board@makeitlabs.com for any questions or concerns.</p>
+      <p v-else>You may not use the space until you can fulfill the terms. Contact board@makeitlabs.com for any questions or concerns.</p>
     </div>
-
-    <!--
-    <div id="AgreementTxt">
-      <h1>MakeIt Labs Agreement</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum consequatur vero rem voluptatum ipsam. Nesciunt at, delectus aliquid reprehenderit hic ex perferendis, animi aliquam dolorem tempora, asperiores qui natus ipsum!
-      </p>
-      <p>
-        Have fun!
-      </p>
-    </div>
-
-
-    <div id="Slider">
-      <div id="Slide"></div>
-      <div id="OK" @click="agree(true)" class="end" />
-      <div id="NO" @click="agree(false)" class="end" />
-    </div>
-
-
-    <canvas v-for="(i, idx) in 2" :key="idx" ref="can"></canvas>
-    <video autoplay ref="vid" />
-    -->
   </div>
 </template>
 
@@ -57,18 +36,19 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import stophand from '@/assets/Stop_hand.svg';
 import Slides from '@/components/Slides.vue';
+import Picture from '@/components/Picture.vue';
 
 @Component({
   components:{
     stophand,
-    Slides
+    Slides,
+    Picture
   }
 })
 export default class AgreementScreen extends Vue {
   @Prop() private msg!: string;
   $refs!: {
     can: HTMLCanvasElement[];
-    vid: HTMLVideoElement;
     slides: Slides;
   }
 
@@ -79,6 +59,7 @@ export default class AgreementScreen extends Vue {
 
   bAgree = false;
   bScreen = true;
+  bPicture = false;
   idx = 0;
 
   timeOut = 120;
@@ -98,35 +79,7 @@ export default class AgreementScreen extends Vue {
         this.agree(false);
       }
     }, 1000);
-    /*
-    this.vid = this.$refs.vid;
-    for(const can of this.$refs.can) {
-      const ctx = can.getContext('2d') as CanvasRenderingContext2D;
-      can.width = window.innerWidth;
-      can.height = window.innerHeight;
 
-      ctx.translate(can.width, 0);
-      ctx.scale(-1, 1);
-      this.ctx.push(ctx);
-    }
-
-    this.slide = document.querySelector('#Slide') as HTMLElement;
-    this.slide.style.top = (window.innerHeight / 2) - 50 + "px";
-
-    setTimeout(()=>{
-      this.bScreen = true;
-      navigator.mediaDevices.getUserMedia({video: {width: window.innerWidth, height: window.innerHeight}})
-      .then((stream) => {
-        this.vid.srcObject = stream;
-
-        this.update();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    },1000);
-
-    */
     document.addEventListener('keydown', (e) => {
       switch(e.which){
         // Y Key
@@ -153,7 +106,10 @@ export default class AgreementScreen extends Vue {
             this.timeOut = 120;
             this.idx++;
           } else {
-            this.agree(true);
+            gsap.to("#slide", {autoAlpha: 0});
+            gsap.to("#btnContainer", {autoAlpha: 0});
+            this.bPicture = true;
+            // this.agree(true);
           }
           gsap.to("#next", {backgroundColor: "#070", boxShadow: "#0F0 0px 0px 0px"})
           break;
@@ -170,6 +126,10 @@ export default class AgreementScreen extends Vue {
           break;
       }
     });
+  }
+
+  private onPicture(){
+    this.agree(true);
   }
 
   private update() {
@@ -192,8 +152,6 @@ export default class AgreementScreen extends Vue {
     }else{
       gsap.to('#AgreementTxt', {autoAlpha: 1, backgroundColor: "#F00", delay: .5});
     }
-
-    // this.bScreen = false;
   }
 }
 </script>

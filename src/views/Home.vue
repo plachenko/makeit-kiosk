@@ -50,7 +50,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = false;
+  private bShowNotice = true;
   private user?: any = null;
 
   $refs!: {
@@ -87,8 +87,6 @@ export default class Home extends Vue{
     gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
       this.bShowNotice = false;
     }});
-    // this.bLogged = false;
-    console.log(e);
   }
 
   private onEnter(){
