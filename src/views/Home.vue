@@ -72,7 +72,7 @@ export default class Home extends Vue{
     document.addEventListener('keydown', (e)=>{
       switch(e.which){
         case 32:
-          if(!this.bLogged){
+          if(!this.bLogged && this.$refs.logo){
             this.onEnter();
           }
           break;
