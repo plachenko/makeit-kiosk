@@ -95,7 +95,7 @@ export default class Home extends Vue{
     this.$refs.logo.glow();
 
     this.user = {
-      name: 'Denis Perchenko',
+      name: 'John Test User',
       time: new Date(),
       agree: false
     }
