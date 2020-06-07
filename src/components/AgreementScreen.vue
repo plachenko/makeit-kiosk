@@ -7,9 +7,9 @@
         <stophand style="position: absolute; top: 15px; right: 30px" />
       </div>
 
-      <Slides ref="slides" :slideIdx="idx" />
+      <Slides v-if="!bPicture" ref="slides" :slideIdx="idx"  />
 
-      <div id="btnContainer">
+      <div v-if="!bPicture" id="btnContainer">
         <div class="btn" id="prev">&#x2B05; Back</div>
         <div style="padding-top: 10px;">
           <span class="arrow">&#x25BC;</span>
@@ -62,6 +62,8 @@ export default class AgreementScreen extends Vue {
   bPicture = false;
   idx = 0;
 
+  slideNum = 0;
+
   timeOut = 120;
 
   interval?: any;
@@ -70,9 +72,10 @@ export default class AgreementScreen extends Vue {
     gsap.from("#notice", {top: -100});
     gsap.from("#btnContainer", {bottom: -100, delay: 1});
     gsap.fromTo(".arrow", .4, {y: -2}, {y: 10, repeat: -1, yoyo: true});
-
     gsap.from("#prev", .4, {left: "-=40", autoAlpha:0, delay: 1.8});
     gsap.from("#next", .4, {right: "-=40", autoAlpha:0, delay: 1.8});
+
+    this.slideNum = this.$refs.slides.slides.length - 1;
 
     this.interval = setInterval(() => {
       if(this.timeOut > 0){
@@ -86,7 +89,7 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
-          if(this.idx < this.$refs.slides.slides.length - 1){
+          if(this.idx < this.slideNum){
             gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
           }
           break;
@@ -104,14 +107,11 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
-          if(this.idx < this.$refs.slides.slides.length - 1){
+          if(this.idx < this.slideNum){
             this.timeOut = 120;
             this.idx++;
           } else {
-            gsap.to("#slide", {autoAlpha: 0});
-            gsap.to("#btnContainer", {autoAlpha: 0});
             this.bPicture = true;
-            // this.agree(true);
           }
           gsap.to("#next", {backgroundColor: "#070", boxShadow: "#0F0 0px 0px 0px"})
           break;
@@ -148,15 +148,12 @@ export default class AgreementScreen extends Vue {
   }
 
   private agree(val: boolean) {
-    const offset = val ? -1 : 1;
-      gsap.to("#AgreementNotice", {opacity: 0});
+    this.bAgree = val;
+    gsap.to("#AgreementNotice", {opacity: 0});
 
-    // gsap.to("#AgreementNotice", {x: offset * window.innerWidth});
     setTimeout(() => {
       this.$emit('agreement', val);
     }, 6000);
-
-    this.bAgree = val;
 
     if(val){
       gsap.to('#AgreementTxt', {autoAlpha: 1, backgroundColor: "#0F0", delay: .5});
