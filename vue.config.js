@@ -1,6 +1,14 @@
 
 module.exports = {
   publicPath: './',
+  configureWebpack: {
+    devServer: {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*"
+      }
+    }
+  },
   chainWebpack: (config) => {
     const svgRule = config.module.rule('svg');
 

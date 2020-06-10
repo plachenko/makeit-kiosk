@@ -73,12 +73,28 @@ export default class Home extends Vue{
 
     let id = "";
 
+    if(process.env.VUE_APP_SECRET){
+      const secret = process.env.VUE_APP_SECRET;
+      const headers = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa('entrykiosk:'+secret)
+      });
+
+      console.log(headers.get('Authorization'));
+      fetch('http://auth.makeitlabs.com/authit/api/v1/resources/frontdoor/acl', {
+        mode: 'no-cors',
+        headers: headers
+      })
+        .then(response => response.json())
+        .then(data => console.log(data))
+    }
+
     document.addEventListener('keydown', (e)=>{
 
       if(!this.bLogged && this.$refs.logo){
-        if(e.key == "Enter") {
+        if(e.key == "Enter" && id.length) {
 
-          _user = json.filter(e => e.raw_tag_id == id);
+          _user = json.filter((e: any) => e.raw_tag_id == id);
           this.onEnter(_user[0]);
 
         } else {
