@@ -38,6 +38,7 @@ import AgreementScreen from '@/components/AgreementScreen.vue'
 import Logo from '@/components/Logo.vue'
 import Time from '@/components/Time.vue'
 import Welcome from '@/components/Welcome.vue'
+import json from '@/assets/_private/acl.json'
 
 @Component({
   name: "Home",
@@ -63,21 +64,33 @@ export default class Home extends Vue{
 
   mounted(){
 
+    let _user = null;
     this.bShowLogo = true;
 
     if(this.bShowNotice){
       gsap.to('#title', {y: -1 * window.innerHeight})
     }
 
+    let id = "";
+
     document.addEventListener('keydown', (e)=>{
-      switch(e.which){
-        case 32:
-          if(!this.bLogged && this.$refs.logo){
-            this.onEnter();
-          }
-          break;
+
+      if(!this.bLogged && this.$refs.logo){
+        if(e.key == "Enter") {
+
+          _user = json.filter(e => e.raw_tag_id == id);
+          this.onEnter(_user[0]);
+
+        } else {
+          id += e.key;
+
+          setTimeout(() => {
+            id = "";
+          }, 300);
+
+        }
       }
-    })
+    });
   }
 
   private handleAgreement(e: any){
@@ -86,24 +99,26 @@ export default class Home extends Vue{
     this.user.agree = e.val;
     this.user.picture = e.picture;
 
-    console.log(this.user);
-
     gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
       this.bShowNotice = false;
       this.user = null;
     }});
   }
 
-  private onEnter(){
+  private onEnter(user: any){
 
     this.$refs.logo.glow();
 
+    console.log(user);
+
     this.user = {
-      name: 'John Test User',
+      name: user.member.replace('.', ' '),
       time: new Date(),
       agree: false,
       picture: null
     }
+
+    console.log(this.user);
 
     setTimeout(() => {
       this.bLogged = true;
