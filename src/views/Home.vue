@@ -17,6 +17,7 @@
           ref="welcome"
           :user="user" />
 
+        <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
       </div>
     </div>
 
@@ -55,6 +56,7 @@ export default class Home extends Vue{
   private bShowLogo = false;
   private bShowNotice = false;
   private user?: any = null;
+  private bNetworkError = false;
 
   $refs!: {
     logo: Logo;
@@ -80,13 +82,18 @@ export default class Home extends Vue{
         'Authorization': 'Basic ' + btoa('entrykiosk:'+secret)
       });
 
-      console.log(headers.get('Authorization'));
       fetch('http://auth.makeitlabs.com/authit/api/v1/resources/frontdoor/acl', {
         mode: 'no-cors',
         headers: headers
       })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => {
+          this.bNetworkError = false;
+          // console.log(data)
+        })
+        .catch((e) => {
+          this.bNetworkError = true;
+        });
     }
 
     document.addEventListener('keydown', (e)=>{
@@ -125,16 +132,12 @@ export default class Home extends Vue{
 
     this.$refs.logo.glow();
 
-    console.log(user);
-
     this.user = {
       name: user.member.replace('.', ' '),
       time: new Date(),
       agree: false,
       picture: null
     }
-
-    console.log(this.user);
 
     setTimeout(() => {
       this.bLogged = true;
@@ -200,6 +203,17 @@ export default class Home extends Vue{
   color:#000;
   top: 100%;
   z-index: 9996;
+}
+
+#networkError{
+  background-color:#F00;
+  padding: 5px;
+  border-radius: 10px;
+  font-size: .7em;
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  width: 400px;
 }
 
 </style>
