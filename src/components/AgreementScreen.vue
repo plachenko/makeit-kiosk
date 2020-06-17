@@ -68,6 +68,8 @@ export default class AgreementScreen extends Vue {
 
   interval?: any;
 
+  status = "";
+
   mounted(){
     gsap.from("#notice", {top: -100});
     gsap.from("#btnContainer", {bottom: -100, delay: 1});
@@ -81,6 +83,7 @@ export default class AgreementScreen extends Vue {
       if(this.timeOut > 0){
         this.timeOut --;
       } else{
+        this.status = "FAILED";
         this.agree(false);
       }
     }, 1000);
@@ -137,6 +140,7 @@ export default class AgreementScreen extends Vue {
 
   private onError(){
     setTimeout(() => {
+      this.status = "FAILED";
       this.agree(false);
     }, 5000);
   }
@@ -152,7 +156,12 @@ export default class AgreementScreen extends Vue {
     gsap.to("#AgreementNotice", {opacity: 0});
 
     setTimeout(() => {
-      this.$emit('agreement', {val: val, picture: picture});
+      let status = this.status;
+      if(!status.length){
+        status = val ? "ACCEPTED" : "DENIED";
+      }
+
+      this.$emit('agreement', {val: val, picture: picture, status: status });
     }, 6000);
 
     if(val){

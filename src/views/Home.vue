@@ -39,7 +39,6 @@ import AgreementScreen from '@/components/AgreementScreen.vue'
 import Logo from '@/components/Logo.vue'
 import Time from '@/components/Time.vue'
 import Welcome from '@/components/Welcome.vue'
-import json from '@/assets/_private/acl.json'
 
 @Component({
   name: "Home",
@@ -65,8 +64,6 @@ export default class Home extends Vue{
   }
 
   mounted(){
-
-    let _user = null;
     this.bShowLogo = true;
 
     if(this.bShowNotice){
@@ -74,53 +71,80 @@ export default class Home extends Vue{
     }
 
     let id = "";
-
-    if(process.env.VUE_APP_SECRET){
-      const secret = process.env.VUE_APP_SECRET;
-      const headers = new Headers({
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa('entrykiosk:'+secret)
-      });
-
-      fetch('http://auth.makeitlabs.com/authit/api/v1/resources/frontdoor/acl', {
-        mode: 'no-cors',
-        headers: headers
-      })
-        .then(response => response.json())
-        .then(data => {
-          this.bNetworkError = false;
-          // console.log(data)
-        })
-        .catch((e) => {
-          this.bNetworkError = true;
-        });
-    }
-
     document.addEventListener('keydown', (e)=>{
-
       if(!this.bLogged && this.$refs.logo){
         if(e.key == "Enter" && id.length) {
-
-          _user = json.filter((e: any) => e.raw_tag_id == id);
-          this.onEnter(_user[0]);
-
+          this.handleAuthentication(id);
         } else {
-          id += e.key;
-
+          if(e.key !== "Enter"){
+            id += e.key;
+          }
           setTimeout(() => {
             id = "";
           }, 300);
-
         }
       }
+    });
+  }
+
+  private handleAuthentication(id: string){
+    if(process.env.VUE_APP_SECRET){
+      const url = 'https://staging.makeitlabs.com/authit/api/v1/resources/frontdoor/fob/';
+      const secret = process.env.VUE_APP_SECRET;
+      const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' +btoa('entrykiosk:'+secret)
+      });
+
+      fetch(url + id, { headers: headers }).then(res => res.json())
+      .then(user => {
+        this.bNetworkError = false;
+        this.onEnter(user);
+      })
+      .catch((e) => {
+        console.log(e);
+        this.bNetworkError = true;
+      });
+    }
+  }
+
+  private handleSendPost(user: any){
+    const url = 'https://staging.makeitlabs.com/authit/api/v1/kiosklog';
+    const secret = process.env.VUE_APP_SECRET;
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' +btoa('entrykiosk:'+secret)
+    });
+
+    fetch(url, {
+      headers: headers,
+      body: JSON.stringify({
+        user: user.member,
+        event: user.status
+      }),
+      method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.bNetworkError = false;
+    })
+    .catch((e) => {
+      console.log(e);
+      this.bNetworkError = true;
     });
   }
 
   private handleAgreement(e: any){
     this.bLogged = false;
     this.bShowTime = false;
+
     this.user.agree = e.val;
     this.user.picture = e.picture;
+    this.user.status = e.status;
+
+    this.handleSendPost(this.user);
 
     gsap.to("#title", {y: 0, delay: 1, onComplete: () => {
       this.bShowNotice = false;
@@ -134,7 +158,9 @@ export default class Home extends Vue{
 
     this.user = {
       name: user.member.replace('.', ' '),
+      member: user.member,
       time: new Date(),
+      status: 'FAILED',
       agree: false,
       picture: null
     }
