@@ -20,7 +20,7 @@ export default class Picture extends Vue{
     vid: HTMLVideoElement;
     can: HTMLCanvasElement;
   }
-  pictureCnt = 3;
+  pictureCnt = 6;
   vid?: HTMLVideoElement;
   ctx?: CanvasRenderingContext2D;
   can?: HTMLCanvasElement;
@@ -49,6 +49,7 @@ export default class Picture extends Vue{
       })
     })
     .then(() => {
+      console.log(this.devices);
       this.setVideo(this.devices[this.deviceIdx]);
     })
     .catch((error) => {
@@ -56,6 +57,7 @@ export default class Picture extends Vue{
     })
   }
   private setVideo(id: string){
+    console.log(id) ;
     navigator.mediaDevices.getUserMedia({video: {deviceId: id, width: 500, height: 500}})
     .then((stream) => {
       this.localStream = stream;
@@ -74,10 +76,12 @@ export default class Picture extends Vue{
       this.$emit('handleError');
     });
   }
+
   private update() {
     this.ctx.drawImage(this.vid, 0, 0);
     this.req = window.requestAnimationFrame(this.update);
   }
+
   private takePicture(){
     if(!this.pictureTaken){
       this.vid.pause();
@@ -89,7 +93,7 @@ export default class Picture extends Vue{
         this.localStream.getTracks()[0].stop();
         this.deviceIdx++;
         setTimeout(()=>{
-          this.pictureCnt = 3;
+          this.pictureCnt = 8;
           this.pictureTaken = false;
         }, 1000);
         this.setVideo(this.devices[this.deviceIdx]);
@@ -103,6 +107,7 @@ export default class Picture extends Vue{
       }
     }
   }
+
   beforeDestroy(){
     this.vid.src = "";
     if(this.localStream){

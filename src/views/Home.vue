@@ -89,7 +89,7 @@ export default class Home extends Vue{
 
   private handleAuthentication(id: string){
     if(process.env.VUE_APP_SECRET){
-      const url = 'https://staging.makeitlabs.com/authit/api/v1/resources/frontdoor/fob/';
+      const url = 'https://auth.makeitlabs.com/authit/api/v1/resources/frontdoor/fob/';
       const secret = process.env.VUE_APP_SECRET;
       const headers = new Headers({
         'Accept': 'application/json',
@@ -110,7 +110,7 @@ export default class Home extends Vue{
   }
 
   private handleSendPost(user: any){
-    const url = 'https://staging.makeitlabs.com/authit/api/v1/kiosklog';
+    const url = 'https://auth.makeitlabs.com/authit/api/v1/kiosklog';
     const secret = process.env.VUE_APP_SECRET;
     const headers = new Headers({
       'Content-Type': 'application/json',

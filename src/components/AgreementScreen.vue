@@ -1,5 +1,8 @@
 <template>
   <div id="Agreement">
+    <audio src="~@/assets/done-for-you.ogg" ref="nextSnd" />
+    <audio src="~@/assets/back.mp3" ref="backSnd" />
+
     <div id="AgreementNotice">
       <div id="notice">
         <stophand style="position: absolute; top: 15px; left: 30px" />
@@ -50,6 +53,8 @@ export default class AgreementScreen extends Vue {
   $refs!: {
     can: HTMLCanvasElement[];
     slides: Slides;
+    nextSnd: HTMLAudioElement;
+    backSnd: HTMLAudioElement;
   }
 
   vid!: HTMLVideoElement;
@@ -93,6 +98,11 @@ export default class AgreementScreen extends Vue {
         // Y Key
         case 89:
           if(this.idx < this.slideNum){
+            if(this.$refs.nextSnd){
+              this.$refs.nextSnd.pause();
+              this.$refs.nextSnd.currentTime = 0;
+              this.$refs.nextSnd.play();
+            }
             gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
           }
           break;
@@ -100,6 +110,11 @@ export default class AgreementScreen extends Vue {
         // N Key
         case 78:
           if(this.idx){
+            if(this.$refs.backSnd){
+              this.$refs.backSnd.pause();
+              this.$refs.backSnd.currentTime = 0;
+              this.$refs.backSnd.play();
+            }
             gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
           }
           break;
