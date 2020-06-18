@@ -2,6 +2,7 @@
   <div class="home">
 
     <!-- Title Screen -->
+    <!--
     <div id="title" class="overlay">
       <div v-if="!bShowNotice" class="innerTitle">
         <Time ref="time" v-if="bShowTime" />
@@ -20,6 +21,9 @@
         <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
       </div>
     </div>
+    -->
+
+    <Picture />
 
     <!-- Agreement screen -->
     <AgreementScreen
@@ -32,6 +36,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import gsap from 'gsap';
+
+import Picture from '@/components/Picture.vue';
 
 // @ is an alias to /src
 import AgreementScreen from '@/components/AgreementScreen.vue'
@@ -46,7 +52,8 @@ import Welcome from '@/components/Welcome.vue'
     Logo,
     Time,
     Welcome,
-    AgreementScreen
+    AgreementScreen,
+    Picture
   }
 })
 export default class Home extends Vue{
@@ -72,6 +79,7 @@ export default class Home extends Vue{
 
     let id = "";
     document.addEventListener('keydown', (e)=>{
+      console.log(e);
       if(!this.bLogged && this.$refs.logo){
         if(e.key == "Enter" && id.length) {
           this.handleAuthentication(id);
@@ -88,6 +96,7 @@ export default class Home extends Vue{
   }
 
   private handleAuthentication(id: string){
+    console.log('got ID...', id, process);
     if(process.env.VUE_APP_SECRET){
       const url = 'https://staging.makeitlabs.com/authit/api/v1/resources/frontdoor/fob/';
       const secret = process.env.VUE_APP_SECRET;
@@ -96,6 +105,7 @@ export default class Home extends Vue{
         'Content-Type': 'application/json',
         'Authorization': 'Basic ' +btoa('entrykiosk:'+secret)
       });
+      console.log(headers);
 
       fetch(url + id, { headers: headers }).then(res => res.json())
       .then(user => {
@@ -121,7 +131,9 @@ export default class Home extends Vue{
       headers: headers,
       body: JSON.stringify({
         user: user.member,
-        event: user.status
+        event: user.status,
+        visibleimage: user.picture,
+        irimage: user.picture
       }),
       method: "POST"
     })

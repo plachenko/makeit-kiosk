@@ -30,6 +30,10 @@ export default class Picture extends Vue{
   interval?: any;
   localStream?: MediaStream;
   error = "";
+  devices: string[] = [];
+  deviceIdx = 0;
+  pictures: string[] = [];
+  pictureTaken = false;
 
   mounted(){
     this.vid = this.$refs.vid;
@@ -39,7 +43,28 @@ export default class Picture extends Vue{
 
     this.ctx = this.can.getContext('2d');
 
-    navigator.mediaDevices.getUserMedia({video: {width: 500, height: 500}})
+    navigator.mediaDevices.enumerateDevices()
+    .then((devices) => {
+      devices.forEach((device) => {
+        const exists = this.devices.some(_device => device.deviceId == _device);
+
+        if(device.kind == "videoinput" && !exists){
+          // this.$refs.vid.setSinkId(device.deviceId);
+          this.devices.push(device.deviceId);
+        }
+      })
+    })
+    .then(() => {
+      console.log('taking photo.');
+      this.setVideo(this.devices[this.deviceIdx]);
+    })
+    .catch((error) => {
+      console.log(error.name, error.message);
+    })
+  }
+
+  private setVideo(id: string){
+    navigator.mediaDevices.getUserMedia({video: {deviceId: id, width: 500, height: 500}})
     .then((stream) => {
       this.localStream = stream;
       this.vid.srcObject = stream;
@@ -58,7 +83,6 @@ export default class Picture extends Vue{
       this.error = "Webcam not found";
       this.$emit('handleError');
     });
-
   }
 
   private update() {
@@ -68,14 +92,30 @@ export default class Picture extends Vue{
   }
 
   private takePicture(){
-    this.vid.pause();
-    document.getElementById('flash').style.opacity = '1';
-    gsap.to("#flash", .3, {opacity: 0});
-    clearInterval(this.interval);
-    window.cancelAnimationFrame(this.req);
-    setTimeout(()=>{
-      this.$emit('pictureTaken', this.can);
-    }, 3000);
+    if(!this.pictureTaken){
+      this.vid.pause();
+      document.getElementById('flash').style.opacity = '1';
+      gsap.to("#flash", .3, {opacity: 0});
+      this.pictureTaken = true;
+      this.pictures.push(this.can.toDataURL('image/jpeg'));
+
+      if(this.deviceIdx < this.devices.length - 1){
+        this.deviceIdx++;
+        setTimeout(()=>{
+          this.pictureCnt = 3;
+          this.pictureTaken = false;
+        }, 1000);
+        this.setVideo(this.devices[this.deviceIdx]);
+        this.vid.play();
+      }else{
+        clearInterval(this.interval);
+        window.cancelAnimationFrame(this.req);
+        setTimeout(()=>{
+          this.$emit('pictureTaken', this.pictures);
+          console.log(this.pictures);
+        }, 3000);
+      }
+    }
   }
 
   beforeDestroy(){
