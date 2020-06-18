@@ -8,7 +8,7 @@
         {{error}}. Please contact board@makeitlabs.com
       </div>
     </div>
-    <video autoplay ref="vid" />
+    <video width="500" height="500" playsinline autoplay ref="vid" />
   </div>
 </template>
 <script lang="ts">
@@ -20,7 +20,7 @@ export default class Picture extends Vue{
     vid: HTMLVideoElement;
     can: HTMLCanvasElement;
   }
-  pictureCnt = 6;
+  pictureCnt = 5;
   vid?: HTMLVideoElement;
   ctx?: CanvasRenderingContext2D;
   can?: HTMLCanvasElement;
@@ -35,21 +35,19 @@ export default class Picture extends Vue{
   mounted(){
     this.vid = this.$refs.vid;
     this.can = this.$refs.can;
-    this.can.width = 500;
-    this.can.height = 500;
+    this.can.width = 640;
+    this.can.height = 640;
     this.ctx = this.can.getContext('2d');
     navigator.mediaDevices.enumerateDevices()
     .then((devices) => {
       devices.forEach((device) => {
         const exists = this.devices.some(_device => device.deviceId == _device);
         if(device.kind == "videoinput" && !exists){
-          // this.$refs.vid.setSinkId(device.deviceId);
           this.devices.push(device.deviceId);
         }
       })
     })
     .then(() => {
-      console.log(this.devices);
       this.setVideo(this.devices[this.deviceIdx]);
     })
     .catch((error) => {
@@ -57,8 +55,7 @@ export default class Picture extends Vue{
     })
   }
   private setVideo(id: string){
-    console.log(id) ;
-    navigator.mediaDevices.getUserMedia({video: {deviceId: id, width: 500, height: 500}})
+    navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
       this.localStream = stream;
       this.vid.srcObject = stream;
@@ -78,7 +75,7 @@ export default class Picture extends Vue{
   }
 
   private update() {
-    this.ctx.drawImage(this.vid, 0, 0);
+    this.ctx.drawImage(this.vid, 0, 0, this.vid.videoWidth, this.vid.videoHeight, 0, 0, 640, 640);
     this.req = window.requestAnimationFrame(this.update);
   }
 
@@ -94,12 +91,12 @@ export default class Picture extends Vue{
         this.deviceIdx++;
         setTimeout(()=>{
           this.pictureCnt = 8;
+          clearInterval(this.interval);
           this.pictureTaken = false;
         }, 1000);
         this.setVideo(this.devices[this.deviceIdx]);
         this.vid.play();
       }else{
-        clearInterval(this.interval);
         window.cancelAnimationFrame(this.req);
         setTimeout(()=>{
           this.$emit('pictureTaken', this.pictures);

@@ -9,7 +9,7 @@
           <li>exposure</li>
         </ul>
       </p>
-      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 2 second delay. After using the kiosk, please make sure to wash your hands.</p>
+      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 5 second delay, then an IR photo will be taken after an 8 second delay. After using the kiosk, please make sure to wash your hands.</p>
     </div>
   </div>
 </template>
