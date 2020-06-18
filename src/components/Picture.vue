@@ -74,7 +74,7 @@ export default class Picture extends Vue{
     clearInterval(this.interval);
     window.cancelAnimationFrame(this.req);
     setTimeout(()=>{
-      this.$emit('pictureTaken', this.can);
+      this.$emit('pictureTaken', this.can.toDataURL('image/jpeg'));
     }, 3000);
   }
 

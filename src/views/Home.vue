@@ -121,13 +121,14 @@ export default class Home extends Vue{
       headers: headers,
       body: JSON.stringify({
         user: user.member,
-        event: user.status
+        event: user.status,
+        visibleimage: user.picture,
+        irimage: user.ir
       }),
       method: "POST"
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       this.bNetworkError = false;
     })
     .catch((e) => {
@@ -141,7 +142,13 @@ export default class Home extends Vue{
     this.bShowTime = false;
 
     this.user.agree = e.val;
-    this.user.picture = e.picture;
+    this.user.picture = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
+
+    if(e.picture.length > 1){
+      this.user.ir = e.picture[1].replace(/^data:image\/(png|jpeg);base64,/, "");
+    }else{
+      this.user.ir = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
+    }
     this.user.status = e.status;
 
     this.handleSendPost(this.user);
