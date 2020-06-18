@@ -142,13 +142,19 @@ export default class Home extends Vue{
     this.bShowTime = false;
 
     this.user.agree = e.val;
-    this.user.picture = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
+    if(e.picture){
+      this.user.picture = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
 
-    if(e.picture.length > 1){
-      this.user.ir = e.picture[1].replace(/^data:image\/(png|jpeg);base64,/, "");
+      if(e.picture.length > 1){
+        this.user.ir = e.picture[1].replace(/^data:image\/(png|jpeg);base64,/, "");
+      }else{
+        this.user.ir = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
+      }
     }else{
-      this.user.ir = e.picture[0].replace(/^data:image\/(png|jpeg);base64,/, "");
+      this.user.picture = null;
+      this.user.ir = null;
     }
+
     this.user.status = e.status;
 
     this.handleSendPost(this.user);
