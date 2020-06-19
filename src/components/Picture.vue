@@ -1,5 +1,15 @@
 <template>
   <div id="picture">
+    <div v-if="deviceIdx == 0" style="position: absolute; top: -100px;">
+      <span style="display: inline-block; width: 80px; text-align: center;font-size: 4em;">&#8593;</span>
+      <br />
+      <span>Look Here</span>
+    </div>
+    <div v-if="deviceIdx == 1" style="position: absolute; left: 10px; top: -50px;">
+      <span style="display: inline-block; width: 80px; text-align: center;font-size: 4em;">&#8598;</span>
+      <br />
+      <span>Now Look Here</span>
+    </div>
     <div style="place-content: center; display: flex; position: relative;">
       <div id="flash" />
       <canvas id="can" ref="can"></canvas>
