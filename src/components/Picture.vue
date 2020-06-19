@@ -10,7 +10,7 @@
       <br />
       <span>Now Look Here</span>
     </div>
-    <div style="place-content: center; display: flex; position: relative;">
+    <div style="place-content: center; display: flex; position: relative; margin-top: -100px">
       <div id="flash" />
       <canvas id="can" ref="can"></canvas>
       <span v-show="pictureCnt" style="align-self: center; color: #FFF; z-index: 9999; position: absolute; font-size: 3em;">{{pictureCnt}}</span>

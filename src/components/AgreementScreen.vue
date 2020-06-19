@@ -4,7 +4,7 @@
     <audio src="~@/assets/back.mp3" ref="backSnd" />
 
     <div id="AgreementNotice">
-      <div id="notice">
+      <div id="notice" v-if="!bPicture">
         <stophand style="position: absolute; top: 15px; left: 30px" />
         <span>Covid-19 Notice!</span>
         <stophand style="position: absolute; top: 15px; right: 30px" />
