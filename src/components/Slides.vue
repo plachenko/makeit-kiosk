@@ -3,7 +3,7 @@
     <div style="width: 550px; float: left; padding: 10px; position: relative;">
       <div class="slide">
         <p>MakeItLabs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety.</p>
-        <p>To maintain a touchless experience please kick the arrows located UNDER the kiosk. Kick right if you <span style="color: #0C0; text-decoration: underline">CAN</span> comply with the terms. Kick left if you <span style="text-decoration: underline; color: #C00;">CAN'T</span> comply.</p>
+        <p>To maintain a touchless experience please press the foot switches located UNDER the kiosk. Press right if you <span style="color: #0C0; text-decoration: underline">CAN</span> comply with the terms. Press left if you <span style="text-decoration: underline; color: #C00;">CAN'T</span> comply.</p>
       </div>
       <p class="slide">I do not have any of the following symptoms to Covid-19:
         <ul>
