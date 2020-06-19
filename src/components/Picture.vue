@@ -59,13 +59,15 @@ export default class Picture extends Vue{
     .then((stream) => {
       this.localStream = stream;
       this.vid.srcObject = stream;
-      this.interval = setInterval(()=>{
-        if(this.pictureCnt > 0){
-          this.pictureCnt --;
-        } else {
-          this.takePicture();
-        }
-      }, 1000);
+      setTimeout(() => {
+        this.interval = setInterval(()=>{
+          if(this.pictureCnt > 0){
+            this.pictureCnt --;
+          } else {
+            this.takePicture();
+          }
+        }, 1000);
+      }, 4000);
       this.req = this.update();
     })
     .catch((error: Error) => {
@@ -90,7 +92,7 @@ export default class Picture extends Vue{
         this.localStream.getTracks()[0].stop();
         this.deviceIdx++;
         setTimeout(()=>{
-          this.pictureCnt = 8;
+          this.pictureCnt = 5;
           clearInterval(this.interval);
           this.pictureTaken = false;
         }, 1000);

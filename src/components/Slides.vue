@@ -1,7 +1,10 @@
 <template>
   <div id="slide">
     <div style="width: 550px; float: left; padding: 10px; position: relative;">
-      <p class="slide">MakeItLabs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety.</p>
+      <div class="slide">
+        <p>MakeItLabs is taking the safety of everyone serious enough to make this kiosk to inform and ensure compliance. Our measures are to keep Everyone Else safe and are not negotiable for a member’s own level of personal safety.</p>
+        <p>To maintain a touchless experience please kick the arrows located UNDER the kiosk. Kick right if you <span style="color: #0C0; text-decoration: underline">CAN</span> comply with the terms. Kick left if you <span style="text-decoration: underline; color: #C00;">CAN'T</span> comply.</p>
+      </div>
       <p class="slide">I do not have any of the following symptoms to Covid-19:
         <ul>
           <li>Fever</li>
@@ -9,7 +12,7 @@
           <li>exposure</li>
         </ul>
       </p>
-      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 5 second delay, then an IR photo will be taken after an 8 second delay. After using the kiosk, please make sure to wash your hands.</p>
+      <p class="slide">Proper Mask, hand washing, and cleaning is MANDATORY for everyone. Please show your masked face in the camera preview on the next screen. A photo will be taken after a 5 second delay, then an IR photo will be taken after an 9 second delay. After using the kiosk, please make sure to wash your hands.</p>
     </div>
   </div>
 </template>
@@ -55,7 +58,7 @@ export default class Slides extends Vue {
 }
 .slide{
   position: absolute;
-  top: -100px;
+  top: -200px;
   opacity: 0;
 }
 

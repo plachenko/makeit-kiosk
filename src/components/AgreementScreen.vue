@@ -13,14 +13,18 @@
       <Slides v-if="!bPicture" ref="slides" :slideIdx="idx"  />
 
       <div v-if="!bPicture" id="btnContainer">
-        <div class="btn" id="prev">&#x2B05; Back</div>
+        <div class="btn" id="prev">
+          <Arrow style="stroke: #000; transform: rotate(180deg)" />
+        </div>
         <div style="padding-top: 10px;">
           <span class="arrow">&#x25BC;</span>
           <span class="numTxt">({{this.idx+1}} / 3)</span>
           <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
           <span class="arrow">&#x25BC;</span>
         </div>
-        <div class="btn" id="next">Next &#x27A1;</div>
+        <div class="btn" id="next">
+          <Arrow />
+        </div>
       </div>
 
       <Picture v-if="bPicture" @handleError="onError" @pictureTaken="onPicture" />
@@ -37,6 +41,7 @@
 import gsap from 'gsap';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
+import Arrow from '@/assets/arrow.svg';
 import stophand from '@/assets/Stop_hand.svg';
 import Slides from '@/components/Slides.vue';
 import Picture from '@/components/Picture.vue';
@@ -45,7 +50,8 @@ import Picture from '@/components/Picture.vue';
   components:{
     stophand,
     Slides,
-    Picture
+    Picture,
+    Arrow
   }
 })
 export default class AgreementScreen extends Vue {
@@ -131,7 +137,7 @@ export default class AgreementScreen extends Vue {
           } else {
             this.bPicture = true;
           }
-          gsap.to("#next", {backgroundColor: "#070", boxShadow: "#0F0 0px 0px 0px"})
+          gsap.to("#next", {backgroundColor: "#CC0", boxShadow: "#0F0 0px 0px 0px"})
           break;
 
         // N Key
@@ -142,7 +148,7 @@ export default class AgreementScreen extends Vue {
           }else{
             this.agree(false);
           }
-          gsap.to("#prev", {backgroundColor: "#700", boxShadow: "#F00 0px 0px 0px"})
+          gsap.to("#prev", {backgroundColor: "#CC0", boxShadow: "#F00 0px 0px 0px"})
           break;
       }
     });
@@ -226,17 +232,18 @@ canvas{
   border-radius: 10px;
   width: 120px;
   top: -20px;
-  padding: 10px;
+  /* padding: 10px; */
   position: absolute;
   font-weight: bold;
   color:#FFF;
+  background-color: #CC0;
   }
 #prev{
-  background-color:#700;
+  /* background-color:#700; */
   left: 50px;
 }
 #next{
-  background-color:#070;
+  /* background-color:#070; */
   right: 50px;
 }
 .ftBtnTxt{
