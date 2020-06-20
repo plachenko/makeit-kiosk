@@ -115,7 +115,7 @@ export default class AgreementScreen extends Vue {
 
         // N Key
         case 78:
-          if(this.idx){
+          if(this.idx && this.idx < this.slideNum){
             if(this.$refs.backSnd){
               this.$refs.backSnd.pause();
               this.$refs.backSnd.currentTime = 0;
