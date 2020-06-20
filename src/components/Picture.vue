@@ -1,11 +1,11 @@
 <template>
   <div id="picture">
-    <div v-if="deviceIdx == 0" style="position: absolute; top: -100px;">
+    <div v-if="deviceIdx == 1" style="position: absolute; top: -100px;">
       <span style="display: inline-block; width: 80px; text-align: center;font-size: 4em;">&#8593;</span>
       <br />
       <span>Look Here</span>
     </div>
-    <div v-if="deviceIdx == 1" style="position: absolute; left: 10px; top: -50px;">
+    <div v-if="deviceIdx == 0" style="position: absolute; left: 10px; top: -50px;">
       <span style="display: inline-block; width: 80px; text-align: center;font-size: 4em;">&#8598;</span>
       <br />
       <span>Now Look Here</span>
@@ -39,9 +39,10 @@ export default class Picture extends Vue{
   localStream?: MediaStream;
   error = "";
   devices: string[] = [];
-  deviceIdx = 0;
+  deviceIdx = 1;
   pictures: string[] = [];
   pictureTaken = false;
+  bCanTakePicture = false;
 
   mounted(){
     this.vid = this.$refs.vid;
@@ -66,10 +67,13 @@ export default class Picture extends Vue{
     })
 
     document.addEventListener('keyup', (e) => {
-      this.takePicture();
+      if(this.bCanTakePicture){
+        this.bCanTakePicture = false;
+        this.takePicture();
+      }
     })
   }
-  
+
   private setVideo(id: string){
     navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
@@ -86,6 +90,7 @@ export default class Picture extends Vue{
         }, 1000);
       }, 4000);
       */
+      this.bCanTakePicture = true;
       this.req = this.update();
     })
     .catch((error: Error) => {
@@ -105,14 +110,14 @@ export default class Picture extends Vue{
       this.flash();
       this.pictureTaken = true;
       this.pictures.push(this.can.toDataURL('image/jpeg'));
-      if(this.deviceIdx < this.devices.length - 1){
-        // this.localStream.getTracks()[0].stop();
-        this.deviceIdx++;
+      if(this.deviceIdx > 0){
+        this.localStream.getTracks()[0].stop();
+        this.deviceIdx--;
         setTimeout(()=>{
           this.pictureCnt = 5;
-          clearInterval(this.interval);
+          // clearInterval(this.interval);
           this.pictureTaken = false;
-        }, 1000);
+        }, 400);
         this.setVideo(this.devices[this.deviceIdx]);
         this.vid.play();
       }else{
@@ -130,9 +135,9 @@ export default class Picture extends Vue{
   }
 
   beforeDestroy(){
-    // this.vid.src = "";
+    this.vid.src = "";
     if(this.localStream){
-      // this.localStream.getTracks()[0].stop();
+      this.localStream.getTracks()[0].stop();
     }
   }
 }
