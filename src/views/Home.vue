@@ -2,6 +2,7 @@
   <div class="home">
 
     <!-- Title Screen -->
+    <!--
     <div id="title" class="overlay">
       <div v-if="!bShowNotice" class="innerTitle">
         <Time ref="time" v-if="bShowTime" />
@@ -22,6 +23,8 @@
         <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
       </div>
     </div>
+    -->
+    <Picture />
 
     <!-- Agreement screen -->
     <AgreementScreen
@@ -42,12 +45,15 @@ import Logo from '@/components/Logo.vue'
 import Time from '@/components/Time.vue'
 import Welcome from '@/components/Welcome.vue'
 
+import Picture from '@/components/Picture.vue'
+
 @Component({
   name: "Home",
   components:{
     Logo,
     Time,
     Welcome,
+    Picture,
     AgreementScreen
   }
 })

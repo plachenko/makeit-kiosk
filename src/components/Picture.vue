@@ -13,7 +13,7 @@
     <div style="place-content: center; display: flex; position: relative; margin-top: -100px">
       <div id="flash" />
       <canvas id="can" ref="can"></canvas>
-      <span v-show="pictureCnt" style="align-self: center; color: #FFF; z-index: 9999; position: absolute; font-size: 3em;">{{pictureCnt}}</span>
+      <span v-show="!pictureTaken" style="align-self: center; text-align: center; color: #FFF; z-index: 9999; position: absolute; font-size: 3em; background-color:rgba(0,0,0,.4); padding: 10px;">Press any foot button to take a picture</span>
       <div v-if="error" id="error">
         {{error}}. Please contact board@makeitlabs.com
       </div>
@@ -42,6 +42,7 @@ export default class Picture extends Vue{
   deviceIdx = 0;
   pictures: string[] = [];
   pictureTaken = false;
+
   mounted(){
     this.vid = this.$refs.vid;
     this.can = this.$refs.can;
@@ -63,12 +64,18 @@ export default class Picture extends Vue{
     .catch((error) => {
       console.log(error.name, error.message);
     })
+
+    document.addEventListener('keyup', (e) => {
+      this.takePicture();
+    })
   }
+  
   private setVideo(id: string){
     navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
       this.localStream = stream;
       this.vid.srcObject = stream;
+      /*
       setTimeout(() => {
         this.interval = setInterval(()=>{
           if(this.pictureCnt > 0){
@@ -78,6 +85,7 @@ export default class Picture extends Vue{
           }
         }, 1000);
       }, 4000);
+      */
       this.req = this.update();
     })
     .catch((error: Error) => {
@@ -94,8 +102,7 @@ export default class Picture extends Vue{
   private takePicture(){
     if(!this.pictureTaken){
       this.vid.pause();
-      document.getElementById('flash').style.opacity = '1';
-      gsap.to("#flash", .3, {opacity: 0});
+      this.flash();
       this.pictureTaken = true;
       this.pictures.push(this.can.toDataURL('image/jpeg'));
       if(this.deviceIdx < this.devices.length - 1){
@@ -115,6 +122,11 @@ export default class Picture extends Vue{
         }, 3000);
       }
     }
+  }
+
+  private flash(){
+    document.getElementById('flash').style.opacity = '1';
+    gsap.to("#flash", .3, {opacity: 0});
   }
 
   beforeDestroy(){
