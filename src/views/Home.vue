@@ -16,6 +16,8 @@
           v-if="bLogged"
           ref="welcome"
           :user="user" />
+        
+        <div v-show="!bLogged" id="memberNotice">Tag in to start!</div>
 
         <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
       </div>
@@ -70,6 +72,11 @@ export default class Home extends Vue{
       gsap.to('#title', {y: -1 * window.innerHeight})
     }
 
+    gsap.to('#memberNotice', {autoAlpha: 1, delay: 3});
+    setTimeout(() => {
+      gsap.fromTo("#memberNotice", .8, {y: 0, autoAlpha: 1}, {y: 20, autoAlpha: .1, repeat: -1, yoyo: true});
+    }, 3500);
+    
     let id = "";
     document.addEventListener('keydown', (e)=>{
       if(!this.bLogged && this.$refs.logo){
@@ -254,5 +261,19 @@ export default class Home extends Vue{
   text-align: center;
   width: 400px;
 }
+
+
+#memberNotice{
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 1em;
+  position: absolute;
+  bottom: 130px;
+  text-align: center;
+  width: 400px;
+  border: 2px solid;
+  opacity: 0;
+}
+
 
 </style>
