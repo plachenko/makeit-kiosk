@@ -150,7 +150,7 @@ export default class Home extends Vue{
 
     gsap.to('#memberNotice', {autoAlpha: 1, delay: 3});
     setTimeout(() => {
-      gsap.fromTo("#memberNotice", .8, {y: 20, autoAlpha: 1}, {y: 0, autoAlpha: .1, repeat: -1, yoyo: true});
+      gsap.fromTo("#memberNotice", .8, {y: 0, right: 50, autoAlpha: .1}, {y: 30, right: 0, autoAlpha: 1, repeat: -1, yoyo: true});
     }, 3500);
 
     this.user.agree = e.val;
