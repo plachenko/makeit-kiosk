@@ -103,25 +103,29 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
-          if(this.idx < this.slideNum){
-            if(this.$refs.nextSnd){
-              this.$refs.nextSnd.pause();
-              this.$refs.nextSnd.currentTime = 0;
-              this.$refs.nextSnd.play();
+          if(!this.bPicture){
+            if(this.idx < this.slideNum){
+              if(this.$refs.nextSnd){
+                this.$refs.nextSnd.pause();
+                this.$refs.nextSnd.currentTime = 0;
+                this.$refs.nextSnd.play();
+              }
+              gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
             }
-            gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
           }
           break;
 
         // N Key
         case 78:
-          if(this.idx && this.idx < this.slideNum){
-            if(this.$refs.backSnd){
-              this.$refs.backSnd.pause();
-              this.$refs.backSnd.currentTime = 0;
-              this.$refs.backSnd.play();
+          if(!this.bPicture){
+            if(this.idx){
+              if(this.$refs.backSnd){
+                this.$refs.backSnd.pause();
+                this.$refs.backSnd.currentTime = 0;
+                this.$refs.backSnd.play();
+              }
+              gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
             }
-            gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
           }
           break;
       }
@@ -131,24 +135,28 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
-          if(this.idx < this.slideNum){
-            this.timeOut = 120;
-            this.idx++;
-          } else {
-            this.bPicture = true;
+          if(!this.bPicture){
+            if(this.idx < this.slideNum){
+              this.timeOut = 120;
+              this.idx++;
+            } else {
+              this.bPicture = true;
+            }
+            gsap.to("#next", {backgroundColor: "#CC0", boxShadow: "#0F0 0px 0px 0px"})
           }
-          gsap.to("#next", {backgroundColor: "#CC0", boxShadow: "#0F0 0px 0px 0px"})
           break;
 
         // N Key
         case 78:
-          if(this.idx){
-            this.timeOut = 120;
-            this.idx--;
-          }else{
-            this.agree(false);
+          if(!this.bPicture){
+            if(this.idx){
+              this.timeOut = 120;
+              this.idx--;
+            }else{
+              this.agree(false);
+            }
+            gsap.to("#prev", {backgroundColor: "#CC0", boxShadow: "#F00 0px 0px 0px"})
           }
-          gsap.to("#prev", {backgroundColor: "#CC0", boxShadow: "#F00 0px 0px 0px"})
           break;
       }
     });
