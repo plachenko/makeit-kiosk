@@ -16,7 +16,7 @@
           v-if="bLogged"
           ref="welcome"
           :user="user" />
-        
+
         <div v-show="!bLogged" id="memberNotice">Tag in to start!</div>
 
         <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
@@ -76,7 +76,7 @@ export default class Home extends Vue{
     setTimeout(() => {
       gsap.fromTo("#memberNotice", .8, {y: 0, autoAlpha: 1}, {y: 20, autoAlpha: .1, repeat: -1, yoyo: true});
     }, 3500);
-    
+
     let id = "";
     document.addEventListener('keydown', (e)=>{
       if(!this.bLogged && this.$refs.logo){
@@ -147,6 +147,11 @@ export default class Home extends Vue{
   private handleAgreement(e: any){
     this.bLogged = false;
     this.bShowTime = false;
+
+    gsap.to('#memberNotice', {autoAlpha: 1, delay: 3});
+    setTimeout(() => {
+      gsap.fromTo("#memberNotice", .8, {y: 0, autoAlpha: 1}, {y: 20, autoAlpha: .1, repeat: -1, yoyo: true});
+    }, 3500);
 
     this.user.agree = e.val;
     if(e.picture){
