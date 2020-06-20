@@ -106,7 +106,7 @@ export default class Picture extends Vue{
       this.pictureTaken = true;
       this.pictures.push(this.can.toDataURL('image/jpeg'));
       if(this.deviceIdx < this.devices.length - 1){
-        this.localStream.getTracks()[0].stop();
+        // this.localStream.getTracks()[0].stop();
         this.deviceIdx++;
         setTimeout(()=>{
           this.pictureCnt = 5;
@@ -130,9 +130,9 @@ export default class Picture extends Vue{
   }
 
   beforeDestroy(){
-    this.vid.src = "";
+    // this.vid.src = "";
     if(this.localStream){
-      this.localStream.getTracks()[0].stop();
+      // this.localStream.getTracks()[0].stop();
     }
   }
 }
