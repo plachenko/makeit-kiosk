@@ -4,7 +4,7 @@
     <!-- Title Screen -->
     <div id="title" class="overlay">
       <div v-if="!bShowNotice" class="innerTitle">
-        <Time ref="time" v-if="bShowTime" />
+        <!-- <Time ref="time" v-if="bShowTime" /> -->
 
         <Logo
           ref="logo"
@@ -39,14 +39,14 @@ import gsap from 'gsap';
 import AgreementScreen from '@/components/AgreementScreen.vue'
 
 import Logo from '@/components/Logo.vue'
-import Time from '@/components/Time.vue'
+// import Time from '@/components/Time.vue'
 import Welcome from '@/components/Welcome.vue'
 
 @Component({
   name: "Home",
   components:{
     Logo,
-    Time,
+    // Time,
     Welcome,
     AgreementScreen
   }

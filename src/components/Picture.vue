@@ -144,6 +144,7 @@ export default class Picture extends Vue{
 </script>
 <style>
 video{
+  transform: scaleX(-1);
   display: none;
   }
 #picture{
