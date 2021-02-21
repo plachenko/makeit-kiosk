@@ -2,9 +2,10 @@
   <div class="home">
 
     <!-- Title Screen -->
+    <!--
     <div id="title" class="overlay">
       <div v-if="!bShowNotice" class="innerTitle">
-        <!-- <Time ref="time" v-if="bShowTime" /> -->
+        <Time ref="time" v-if="bShowTime" />
 
         <Logo
           ref="logo"
@@ -22,6 +23,7 @@
         <div v-if="bNetworkError" id="networkError">Cannot contact auth server</div>
       </div>
     </div>
+    -->
 
     <!-- Agreement screen -->
     <AgreementScreen
@@ -55,7 +57,7 @@ export default class Home extends Vue{
   private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = false;
+  private bShowNotice = true;
   private user?: any = null;
   private bNetworkError = false;
 

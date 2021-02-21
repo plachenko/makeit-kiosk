@@ -18,7 +18,7 @@
         </div>
         <div style="padding-top: 10px;">
           <span class="arrow">&#x25BC;</span>
-          <span class="numTxt">({{this.idx+1}} / 3)</span>
+          <!-- <span class="numTxt">({{this.idx+1}} / 3)</span> -->
           <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
           <span class="arrow">&#x25BC;</span>
         </div>
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <Picture v-if="bPicture" @handleError="onError" @pictureTaken="onPicture" />
+      <!-- <Picture v-if="bPicture" @handleError="onError" @pictureTaken="onPicture" /> -->
     </div>
 
     <div id="AgreementTxt">
@@ -92,7 +92,7 @@ export default class AgreementScreen extends Vue {
 
     this.interval = setInterval(() => {
       if(this.timeOut > 0){
-        this.timeOut --;
+        // this.timeOut --;
       } else{
         this.status = "FAILED";
         this.agree(false);
