@@ -1,5 +1,6 @@
 <template>
   <div id="picture">
+    <!--
     <div v-if="deviceIdx == 1" style="position: absolute; top: -100px;">
       <span style="display: inline-block; width: 80px; text-align: center;font-size: 4em;">&#8593;</span>
       <br />
@@ -10,15 +11,24 @@
       <br />
       <span>Now Look Here</span>
     </div>
-    <div style="place-content: center; display: flex; position: relative; margin-top: -100px">
+    -->
+    <!--
+    <div style="place-content: center; display: flex; position: relative;">
       <div id="flash" />
-      <canvas id="can" ref="can"></canvas>
+      <div id="photoContainer">
+      </div>
+      <canvas width="640" height="640" v-for="(can,idx) in 2" :key="idx" ref="can"></canvas>
       <span v-show="!pictureTaken" style="align-self: center; text-align: center; color: #FFF; z-index: 9999; position: absolute; font-size: 3em; background-color:rgba(0,0,0,.4); padding: 10px;">Press any foot button to take a picture</span>
       <div v-if="error" id="error">
         {{error}}. Please contact board@makeitlabs.com
       </div>
     </div>
-    <video width="500" height="500" playsinline autoplay ref="vid" />
+    <video width="500" height="500" v-for="(can,idx) in 2" :key="idx" playsinline autoplay ref="vid" />
+    -->
+    <canvas ref="can" v-for="(can,idx) in 2" :key="'can'+idx" width="640" height="640" />
+
+    <video ref="vid" v-for="(vid,idx) in 2" :key="'v'+idx" width="500" height="500" playsinline autoplay />
+
   </div>
 </template>
 <script lang="ts">
@@ -27,13 +37,13 @@ import gsap from 'gsap';
 @Component
 export default class Picture extends Vue{
   $refs!: {
-    vid: HTMLVideoElement;
-    can: HTMLCanvasElement;
+    vid: HTMLVideoElement[];
+    can: HTMLCanvasElement[];
   }
   pictureCnt = 5;
-  vid?: HTMLVideoElement;
-  ctx?: CanvasRenderingContext2D;
-  can?: HTMLCanvasElement;
+  vid?: HTMLVideoElement[];
+  ctx?: CanvasRenderingContext2D[] = [];
+  can?: HTMLCanvasElement[];
   req?: any;
   interval?: any;
   localStream?: MediaStream;
@@ -47,20 +57,22 @@ export default class Picture extends Vue{
   mounted(){
     this.vid = this.$refs.vid;
     this.can = this.$refs.can;
-    this.can.width = 640;
-    this.can.height = 640;
-    this.ctx = this.can.getContext('2d');
+
+    this.can.forEach((canEl: HTMLCanvasElement) =>{
+      this.ctx.push(canEl.getContext('2d'));
+    })
     navigator.mediaDevices.enumerateDevices()
     .then((devices) => {
-      devices.forEach((device) => {
+      devices.forEach((device, idx) => {
         const exists = this.devices.some(_device => device.deviceId == _device);
         if(device.kind == "videoinput" && !exists){
           this.devices.push(device.deviceId);
+          this.setVideo(device.deviceId, idx);
         }
       })
     })
     .then(() => {
-      this.setVideo(this.devices[this.deviceIdx]);
+      // this.setVideo(this.devices[this.deviceIdx]);
     })
     .catch((error) => {
       console.log(error.name, error.message);
@@ -74,11 +86,11 @@ export default class Picture extends Vue{
     })
   }
 
-  private setVideo(id: string){
+  private setVideo(id: string, idx: number){
     navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
       this.localStream = stream;
-      this.vid.srcObject = stream;
+      this.vid[idx-1].srcObject = stream;
       /*
       setTimeout(() => {
         this.interval = setInterval(()=>{
@@ -100,16 +112,20 @@ export default class Picture extends Vue{
   }
 
   private update() {
-    this.ctx.drawImage(this.vid, 0, 0, this.vid.videoWidth, this.vid.videoHeight, 0, 0, 640, 640);
+    this.ctx[0].drawImage(this.vid[0], 0, 0, this.vid[0].videoWidth, this.vid[0].videoHeight, 0, 0, 640, 640);
+    this.ctx[1].drawImage(this.vid[1], 0, 0, this.vid[1].videoWidth, this.vid[1].videoHeight, 0, 0, 640, 640);
+
     this.req = window.requestAnimationFrame(this.update);
   }
 
   private takePicture(){
     if(!this.pictureTaken){
-      this.vid.pause();
+      this.vid[0].pause();
+      this.vid[1].pause();
       this.flash();
       this.pictureTaken = true;
-      this.pictures.push(this.can.toDataURL('image/jpeg'));
+      this.pictures.push(this.can[0].toDataURL('image/jpeg'));
+      this.pictures.push(this.can[1].toDataURL('image/jpeg'));
       if(this.deviceIdx > 0){
         this.localStream.getTracks()[0].stop();
         this.deviceIdx--;
@@ -119,7 +135,9 @@ export default class Picture extends Vue{
           this.pictureTaken = false;
         }, 400);
         this.setVideo(this.devices[this.deviceIdx]);
-        this.vid.play();
+        this.vid[0].play();
+        this.vid[1].play();
+
       }else{
         window.cancelAnimationFrame(this.req);
         setTimeout(()=>{
@@ -135,7 +153,8 @@ export default class Picture extends Vue{
   }
 
   beforeDestroy(){
-    this.vid.src = "";
+    this.vid[0].src = "";
+    this.vid[1].src = "";
     if(this.localStream){
       this.localStream.getTracks()[0].stop();
     }
@@ -151,17 +170,13 @@ video{
   position: absolute;
   display: flex;
   /* flex-flow: column; */
-  align-items: center;
   justify-content: center;
-  place-content: center;
   top: 92px;
   color:#000;
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
 }
-#can{
-  position: relative;
-}
+
 #flash{
   position: absolute;
   width: 100%;

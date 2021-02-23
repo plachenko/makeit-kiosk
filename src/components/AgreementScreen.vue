@@ -13,7 +13,10 @@
       <Slides v-if="!bPicture" ref="slides" :slideIdx="idx"  />
 
       <div v-if="!bPicture" id="btnContainer">
-        <div class="btn" id="prev">
+        <div class="btn" id="prev" style="border: 2px solid #F00;">
+          <div style="background-color:#F00; border-radius: 8px 8px 0px 0px">
+            Decline
+          </div>
           <Arrow style="stroke: #000; transform: rotate(180deg)" />
         </div>
         <div style="padding-top: 10px;">
@@ -22,7 +25,10 @@
           <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
           <span class="arrow">&#x25BC;</span>
         </div>
-        <div class="btn" id="next">
+        <div class="btn" id="next" style="border: 2px solid #060;">
+          <div style="background-color:#060; border-radius: 8px 8px 0px 0px">
+            Accept
+          </div>
           <Arrow />
         </div>
       </div>
@@ -230,7 +236,7 @@ canvas{
   height: 50px;
   /* background-color:#F00; */
   position: absolute;
-  bottom: 0px;
+  bottom: 30px;
   width: 100%;
   margin-top: 0px;
   text-align: center;
