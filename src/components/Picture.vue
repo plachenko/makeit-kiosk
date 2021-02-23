@@ -26,7 +26,6 @@
     <video width="500" height="500" v-for="(can,idx) in 2" :key="idx" playsinline autoplay ref="vid" />
     -->
     <canvas ref="can" v-for="(can,idx) in 2" :key="'can'+idx" width="640" height="640" />
-
     <video ref="vid" v-for="(vid,idx) in 2" :key="'v'+idx" width="500" height="500" playsinline autoplay />
 
   </div>
@@ -78,12 +77,12 @@ export default class Picture extends Vue{
       console.log(error.name, error.message);
     })
 
-    document.addEventListener('keyup', (e) => {
-      if(this.bCanTakePicture){
-        this.bCanTakePicture = false;
-        this.takePicture();
-      }
-    })
+    // document.addEventListener('keyup', (e) => {
+    //   if(this.bCanTakePicture){
+    //     this.bCanTakePicture = false;
+    //     this.takePicture();
+    //   }
+    // })
   }
 
   private setVideo(id: string, idx: number){
@@ -118,23 +117,27 @@ export default class Picture extends Vue{
     this.req = window.requestAnimationFrame(this.update);
   }
 
-  private takePicture(){
+  public takePicture(){
     if(!this.pictureTaken){
       this.vid[0].pause();
       this.vid[1].pause();
-      this.flash();
+      // this.flash();
       this.pictureTaken = true;
-      this.pictures.push(this.can[0].toDataURL('image/jpeg'));
-      this.pictures.push(this.can[1].toDataURL('image/jpeg'));
-      if(this.deviceIdx > 0){
-        this.localStream.getTracks()[0].stop();
+      if(this.deviceIdx >= 0){
+        // this.localStream.getTracks()[0].stop();
+        // this.localStream.getTracks()[1].stop();
+        this.pictures.push(this.can[0].toDataURL('image/jpeg'));
+        this.pictures.push(this.can[1].toDataURL('image/jpeg'));
+        this.$emit('pictureTaken', this.pictures);
+
         this.deviceIdx--;
         setTimeout(()=>{
           this.pictureCnt = 5;
           // clearInterval(this.interval);
           this.pictureTaken = false;
         }, 400);
-        this.setVideo(this.devices[this.deviceIdx]);
+        this.setVideo(this.devices[this.deviceIdx], 0);
+        this.setVideo(this.devices[this.deviceIdx], 1);
         this.vid[0].play();
         this.vid[1].play();
 
@@ -148,8 +151,8 @@ export default class Picture extends Vue{
   }
 
   private flash(){
-    document.getElementById('flash').style.opacity = '1';
-    gsap.to("#flash", .3, {opacity: 0});
+    // document.getElementById('flash').style.opacity = '1';
+    // gsap.to("#flash", .3, {opacity: 0});
   }
 
   beforeDestroy(){

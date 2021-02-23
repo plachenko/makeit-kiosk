@@ -28,7 +28,7 @@
       <!-- Right Side -->
       <div style="flex: 1">
 
-        <Picture @handleError="onError" @pictureTaken="onPicture" />
+        <Picture ref="pictureCont" @handleError="onError" @pictureTaken="onPicture" />
 
       </div>
     </div>
@@ -66,6 +66,9 @@ import Picture from '@/components/Picture.vue';
 })
 export default class Slides extends Vue {
   public slides?: HTMLCollection;
+  $refs!: {
+    pictureCont: Picture;
+  }
 
   @Prop({type: Number, default: 0}) slideIdx?: number;
   @Watch('slideIdx')
@@ -86,6 +89,10 @@ export default class Slides extends Vue {
 
     gsap.from("#slide", {autoAlpha: 0, delay: .5});
     gsap.to(this.slides[0], {autoAlpha: 1});
+  }
+
+  public takePicture(){
+    this.$refs.pictureCont.takePicture()
   }
 
   private onPicture(picture: any){
@@ -111,7 +118,7 @@ export default class Slides extends Vue {
   /* align-items: center; */
   display: flex;
 
-  padding-top: 40px;
+  padding-top: 100px;
 }
 .slide{
   position: absolute;

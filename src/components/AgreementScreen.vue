@@ -10,7 +10,7 @@
         <stophand style="position: absolute; top: 15px; right: 30px" />
       </div>
 
-      <Slides v-if="!bPicture" ref="slides" :slideIdx="idx"  />
+      <Slides @handleError="onError" @pictureTaken="onPicture" ref="slides" :slideIdx="idx"  />
 
       <div v-if="!bPicture" id="btnContainer">
         <div class="btn" id="prev" style="border: 2px solid #F00;">
@@ -109,6 +109,7 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
+          /*
           if(!this.bPicture){
             if(this.idx < this.slideNum){
               if(this.$refs.nextSnd){
@@ -119,10 +120,12 @@ export default class AgreementScreen extends Vue {
               gsap.to("#next", .3, {backgroundColor: "#0F0", boxShadow: "#0F0 0px 0px 10px"})
             }
           }
+          */
           break;
 
         // N Key
         case 78:
+          /*
           if(!this.bPicture){
             if(this.idx){
               if(this.$refs.backSnd){
@@ -133,6 +136,7 @@ export default class AgreementScreen extends Vue {
               gsap.to("#prev", .3, {backgroundColor: "#F00", boxShadow: "#F00 0px 0px 10px"})
             }
           }
+          */
           break;
       }
     });
@@ -141,6 +145,8 @@ export default class AgreementScreen extends Vue {
       switch(e.which){
         // Y Key
         case 89:
+          this.$refs.slides.takePicture()
+          /*
           if(!this.bPicture){
             if(this.idx < this.slideNum){
               this.timeOut = 120;
@@ -150,17 +156,13 @@ export default class AgreementScreen extends Vue {
             }
             gsap.to("#next", {backgroundColor: "#CC0", boxShadow: "#0F0 0px 0px 0px"})
           }
+          */
           break;
 
         // N Key
         case 78:
           if(!this.bPicture){
-            if(this.idx){
-              this.timeOut = 120;
-              this.idx--;
-            }else{
-              this.agree(false);
-            }
+            this.agree(false);
             gsap.to("#prev", {backgroundColor: "#CC0", boxShadow: "#F00 0px 0px 0px"})
           }
           break;
@@ -169,7 +171,8 @@ export default class AgreementScreen extends Vue {
   }
 
   private onPicture(picture: any){
-    this.bPicture = false;
+    console.log(picture)
+    // this.bPicture = false;
     this.agree(true, picture);
   }
 
