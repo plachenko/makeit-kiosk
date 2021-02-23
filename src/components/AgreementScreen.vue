@@ -15,7 +15,7 @@
       <div v-if="!bPicture" id="btnContainer">
         <div class="btn" id="prev" style="border: 2px solid #F00;">
           <div style="background-color:#F00; border-radius: 8px 8px 0px 0px">
-            Decline
+            Decline ... {{timeOut}}
           </div>
           <Arrow style="stroke: #000; transform: rotate(180deg)" />
         </div>
@@ -81,7 +81,7 @@ export default class AgreementScreen extends Vue {
 
   slideNum = 0;
 
-  timeOut = 120;
+  timeOut = 60;
 
   interval?: any;
 
@@ -97,8 +97,8 @@ export default class AgreementScreen extends Vue {
     this.slideNum = this.$refs.slides.slides.length - 1;
 
     this.interval = setInterval(() => {
-      if(this.timeOut > 0){
-        // this.timeOut --;
+      if(this.timeOut > 1){
+        this.timeOut --;
       } else{
         this.status = "FAILED";
         this.agree(false);
