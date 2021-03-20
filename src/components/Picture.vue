@@ -45,7 +45,7 @@ export default class Picture extends Vue{
   can?: HTMLCanvasElement[];
   req?: any;
   interval?: any;
-  localStream?: MediaStream;
+  localStreams?: MediaStream[] = [];
   error = "";
   devices: string[] = [];
   deviceIdx = 1;
@@ -60,22 +60,24 @@ export default class Picture extends Vue{
     this.can.forEach((canEl: HTMLCanvasElement) =>{
       this.ctx.push(canEl.getContext('2d'));
     })
-    navigator.mediaDevices.enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device, idx) => {
-        const exists = this.devices.some(_device => device.deviceId == _device);
-        if(device.kind == "videoinput" && !exists){
-          this.devices.push(device.deviceId);
-          this.setVideo(device.deviceId, idx);
-        }
+    setTimeout(()=>{
+      navigator.mediaDevices.enumerateDevices()
+      .then((devices) => {
+        devices.forEach((device, idx) => {
+          const exists = this.devices.some(_device => device.deviceId == _device);
+          if(device.kind == "videoinput" && !exists){
+            this.devices.push(device.deviceId);
+            this.setVideo(device.deviceId, idx);
+          }
+        })
       })
-    })
-    .then(() => {
-      // this.setVideo(this.devices[this.deviceIdx]);
-    })
-    .catch((error) => {
-      console.log(error.name, error.message);
-    })
+      .then(() => {
+        // this.setVideo(this.devices[this.deviceIdx]);
+      })
+      .catch((error) => {
+        console.log(error.name, error.message);
+      })
+    }, 3000)
 
     // document.addEventListener('keyup', (e) => {
     //   if(this.bCanTakePicture){
@@ -88,8 +90,9 @@ export default class Picture extends Vue{
   private setVideo(id: string, idx: number){
     navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
-      this.localStream = stream;
+      this.localStreams.push(stream);
       this.vid[idx-1].srcObject = stream;
+      console.log(this.vid[idx-1], stream)
       /*
       setTimeout(() => {
         this.interval = setInterval(()=>{
@@ -158,8 +161,9 @@ export default class Picture extends Vue{
   beforeDestroy(){
     this.vid[0].src = "";
     this.vid[1].src = "";
-    if(this.localStream){
-      this.localStream.getTracks()[0].stop();
+    if(this.localStreams.length){
+      this.localStreams[0].getTracks()[0].stop();
+      this.localStreams[1].getTracks()[0].stop();
     }
   }
 }
@@ -167,7 +171,7 @@ export default class Picture extends Vue{
 <style>
 video{
   transform: scaleX(-1);
-  display: none;
+  /* display: none; */
   }
 #picture{
   position: absolute;

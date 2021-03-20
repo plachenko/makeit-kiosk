@@ -56,7 +56,7 @@ export default class Home extends Vue{
   private bShowTime = false;
   private bShowLogo = false;
   private bShowNotice = false;
-  private user?: any = null;
+  private user?: any = {name: 'Denis Perche'};
   private bNetworkError = false;
 
   $refs!: {

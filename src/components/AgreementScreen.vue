@@ -102,6 +102,7 @@ export default class AgreementScreen extends Vue {
       } else{
         this.status = "FAILED";
         this.agree(false);
+        clearInterval(this.interval)
       }
     }, 1000);
 
@@ -171,16 +172,17 @@ export default class AgreementScreen extends Vue {
   }
 
   private onPicture(picture: any){
-    console.log(picture)
     // this.bPicture = false;
     this.agree(true, picture);
   }
 
   private onError(){
+    /*
     setTimeout(() => {
       this.status = "FAILED";
       this.agree(false);
     }, 5000);
+    */
   }
 
   private update() {
@@ -192,6 +194,8 @@ export default class AgreementScreen extends Vue {
   private agree(val: boolean, picture: any = null) {
     this.bAgree = val;
     gsap.to("#AgreementNotice", {opacity: 0});
+
+    clearInterval(this.interval)
 
     setTimeout(() => {
       let status = this.status;
