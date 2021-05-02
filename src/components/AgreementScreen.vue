@@ -22,7 +22,7 @@
         <div style="padding-top: 10px;">
           <span class="arrow">&#x25BC;</span>
           <!-- <span class="numTxt">({{this.idx+1}} / 3)</span> -->
-          <span class="ftBtnTxt">Please use the feet buttons below the kiosk.</span>
+          <span class="ftBtnTxt">Please use the foot buttons below the kiosk.</span>
           <span class="arrow">&#x25BC;</span>
         </div>
         <div class="btn" id="next" style="border: 2px solid #060;">
@@ -98,7 +98,8 @@ export default class AgreementScreen extends Vue {
 
     this.interval = setInterval(() => {
       if(this.timeOut > 1){
-        this.timeOut --;
+        // TODO Remove comment
+        // this.timeOut --;
       } else{
         this.status = "FAILED";
         this.agree(false);

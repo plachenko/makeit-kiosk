@@ -27,7 +27,6 @@
     -->
     <canvas ref="can" v-for="(can,idx) in 2" :key="'can'+idx" width="640" height="640" />
     <video ref="vid" v-for="(vid,idx) in 2" :key="'v'+idx" width="500" height="500" playsinline autoplay />
-
   </div>
 </template>
 <script lang="ts">
@@ -71,9 +70,6 @@ export default class Picture extends Vue{
           }
         })
       })
-      .then(() => {
-        // this.setVideo(this.devices[this.deviceIdx]);
-      })
       .catch((error) => {
         console.log(error.name, error.message);
       })
@@ -88,29 +84,32 @@ export default class Picture extends Vue{
   }
 
   private setVideo(id: string, idx: number){
-    navigator.mediaDevices.getUserMedia({video: {deviceId: id ? {exact: id} : undefined, width: 640, height: 640}})
+    console.log(id)
+    navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: id}}}).
+      then((stream) => {
+        this.localStreams.push(stream);
+        this.vid[idx].srcObject = stream;
+        this.req = this.update();
+        console.log(stream);
+      })
+      .catch((error) =>{
+        console.log(error);
+      })
+    /*
+    navigator.mediaDevices.getUserMedia({video: {deviceId: id} ? {exact: id} : undefined, width: 640, height: 640}})
     .then((stream) => {
       this.localStreams.push(stream);
       this.vid[idx-1].srcObject = stream;
       console.log(this.vid[idx-1], stream)
-      /*
-      setTimeout(() => {
-        this.interval = setInterval(()=>{
-          if(this.pictureCnt > 0){
-            this.pictureCnt --;
-          } else {
-            this.takePicture();
-          }
-        }, 1000);
-      }, 4000);
-      */
       this.bCanTakePicture = true;
       this.req = this.update();
     })
     .catch((error: Error) => {
       this.error = "Webcam not found";
+      console.log(error);
       this.$emit('handleError');
     });
+    */
   }
 
   private update() {

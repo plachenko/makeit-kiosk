@@ -52,11 +52,11 @@ import Welcome from '@/components/Welcome.vue'
   }
 })
 export default class Home extends Vue{
-  private bLogged = false;
+  private bLogged = true;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = false;
-  private user?: any = {name: 'Denis Perche'};
+  private bShowNotice = true;
+  private user?: any = {name: ''};
   private bNetworkError = false;
 
   $refs!: {
