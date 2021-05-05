@@ -32,6 +32,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import gsap from 'gsap';
+
 @Component
 export default class Picture extends Vue{
   $refs!: {
@@ -84,13 +85,11 @@ export default class Picture extends Vue{
   }
 
   private setVideo(id: string, idx: number){
-    console.log(id)
     navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: id}}}).
       then((stream) => {
         this.localStreams.push(stream);
         this.vid[idx].srcObject = stream;
         this.req = this.update();
-        console.log(stream);
       })
       .catch((error) =>{
         console.log(error);
@@ -113,8 +112,8 @@ export default class Picture extends Vue{
   }
 
   private update() {
-    this.ctx[0].drawImage(this.vid[0], 0, 0, this.vid[0].videoWidth, this.vid[0].videoHeight, 0, 0, 640, 640);
-    this.ctx[1].drawImage(this.vid[1], 0, 0, this.vid[1].videoWidth, this.vid[1].videoHeight, 0, 0, 640, 640);
+    this.ctx[0]?.drawImage(this.vid[0], 0, 0, this.vid[0].videoWidth, this.vid[0].videoHeight, 0, 0, 640, 640);
+    this.ctx[1]?.drawImage(this.vid[1], 0, 0, this.vid[1].videoWidth, this.vid[1].videoHeight, 0, 0, 640, 640);
 
     this.req = window.requestAnimationFrame(this.update);
   }

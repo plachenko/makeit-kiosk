@@ -28,7 +28,8 @@
       <!-- Right Side -->
       <div style="flex: 1">
 
-        <Picture ref="pictureCont" @handleError="onError" @pictureTaken="onPicture" />
+        <!-- <Picture ref="pictureCont" @handleError="onError" @pictureTaken="onPicture" /> -->
+        <PictureTest ref="pictureCont" @handleError="onError" @pictureTaken="onPicture" />
 
       </div>
     </div>
@@ -57,10 +58,12 @@
 <script lang="ts">
 import gsap from 'gsap';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import PictureTest from '@/components/PictureTest.vue';
 import Picture from '@/components/Picture.vue';
 
 @Component({
   components: {
+    PictureTest,
     Picture
   }
 })
@@ -92,7 +95,7 @@ export default class Slides extends Vue {
   }
 
   public takePicture(){
-    this.$refs.pictureCont.takePicture()
+    this.$refs.pictureCont.takePicture();
   }
 
   private onPicture(picture: any){

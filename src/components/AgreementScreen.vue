@@ -98,8 +98,7 @@ export default class AgreementScreen extends Vue {
 
     this.interval = setInterval(() => {
       if(this.timeOut > 1){
-        // TODO Remove comment
-        // this.timeOut --;
+        this.timeOut --;
       } else{
         this.status = "FAILED";
         this.agree(false);

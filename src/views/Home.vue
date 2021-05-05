@@ -52,10 +52,10 @@ import Welcome from '@/components/Welcome.vue'
   }
 })
 export default class Home extends Vue{
-  private bLogged = true;
+  private bLogged = false;
   private bShowTime = false;
   private bShowLogo = false;
-  private bShowNotice = true;
+  private bShowNotice = false;
   private user?: any = {name: ''};
   private bNetworkError = false;
 
@@ -95,8 +95,6 @@ export default class Home extends Vue{
   }
 
   private handleAuthentication(id: string){
-    console.log(process.env.VUE_APP_SECRET)
-
     if(process.env.VUE_APP_SECRET){
       const url = 'https://auth.makeitlabs.com/authit/api/v1/resources/frontdoor/fob/';
       const secret = process.env.VUE_APP_SECRET;
