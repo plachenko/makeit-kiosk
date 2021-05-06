@@ -21,8 +21,10 @@ export default class PictureTest extends Vue{
   localStreams?: MediaStream[] = [];
 
   devices: string[] = [];
+  deviceIdx: number[] = [];
   pictures: string[] = [];
   pictureTaken = false;
+  req?: any;
 
   mounted(){
     this.vid = this.$refs.vid;
@@ -81,14 +83,14 @@ export default class PictureTest extends Vue{
 
       this.$emit('pictureTaken', this.pictures);
 
-      this.deviceIdx--;
+      // this.deviceIdx--;
       setTimeout(()=>{
-        this.pictureCnt = 5;
+        // this.pictureCnt = 5;
         // clearInterval(this.interval);
         this.pictureTaken = false;
       }, 400);
-      this.setVideo(this.devices[this.deviceIdx], 0);
-      this.setVideo(this.devices[this.deviceIdx], 1);
+      // this.setVideo(this.devices[this.deviceIdx], 0);
+      // this.setVideo(this.devices[this.deviceIdx], 1);
       this.vid[0].play();
       this.vid[1].play();
       /*
@@ -129,7 +131,7 @@ export default class PictureTest extends Vue{
   #picture{
     position: absolute;
     display: flex;
-  
+
     height: 50%;
     }
 
